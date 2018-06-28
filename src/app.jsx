@@ -18,8 +18,8 @@ import TermsOfUse from './components/TermsOfUse.jsx';
 import Driver from './lib/Driver';
 
 let network = {
-  horizonUrl: 'https://horizon.stellar.org',
-  networkPassphrase: StellarSdk.Networks.PUBLIC,
+  horizonUrl: 'https://api.ion.one',
+  networkPassphrase: 'Test ION Network ; June 2018',
   isDefault: true, // If it's default, then we don't show a notice bar at the top
   isTestnet: false,
   isCustom: false,
@@ -103,8 +103,8 @@ class TermApp extends React.Component {
         <div className="HomePage__black">
           <div className="so-back">
             <div className="HomePage__lead">
-              <h2 className="HomePage__lead__title">Trade on the <a href="#exchange">Stellar Decentralized Exchange</a></h2>
-              <p className="HomePage__lead__summary">StellarTerm is an <a href="https://github.com/stellarterm/stellarterm" target="_blank" rel="nofollow noopener noreferrer">open source</a> client for the <a href="https://www.stellar.org/" target="_blank" rel="nofollow noopener noreferrer">Stellar network</a>. <br />Send, receive, and <a href="#exchange">trade</a> assets on the Stellar network easily with StellarTerm.</p>
+              <h2 className="HomePage__lead__title">Trade on the <a href="#exchange">ION Decentralized Exchange</a></h2>
+              <p className="HomePage__lead__summary">ION is a decentralized derivatives market, built with Stellar consensus protocol <br />Easily convert with stablecoin, Trade with leverage, <a href="https://explorer.ion.one" target="_blank" rel="nofollow noopener noreferrer">100% Transparency</a></p>
               {this.renderHomePageActions()}
             </div>
           </div>
@@ -114,24 +114,6 @@ class TermApp extends React.Component {
             <AssetList d={this.props.d} limit={6}></AssetList>
             <div className="AssetListFooter">
               View more assets on the <a href="#markets">market list page</a>.
-            </div>
-          </div>
-        </div>
-        <div className="so-back islandBack">
-          <div className="island">
-            <div className="island__sub">
-              <div className="island__sub__division">
-                <div className="HomePage__sideBlurb">
-                  <p>StellarTerm is just a client that can be used to access the Stellar Decentralized Exchange. Neither StellarTerm nor the developers of it are involved with operating the Stellar network.</p>
-                  <p>StellarTerm is developed by Iris Li, a former employee of the Stellar Development Foundation. The project is independent of the Stellar Development Foundation.</p>
-                </div>
-              </div>
-              <div className="island__sub__division">
-                <div className="HomePage__sideBlurb">
-                  <p>StellarTerm is open source software. To support the project, please <a href="https://github.com/stellarterm/stellarterm" target="_blank" rel="nofollow noopener noreferrer">star the project on GitHub</a>.</p>
-                  <p>The project is released under the Apache-2.0 license and is released as is without warranty.</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

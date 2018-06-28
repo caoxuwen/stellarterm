@@ -52,34 +52,11 @@ class Session extends React.Component {
         <div className="s-alert s-alert--success">
           Your Wallet Account ID: <strong>{d.session.unfundedAccountId}</strong>
         </div>
-        To use your Stellar account, you must activate it by sending at least 5 lumens (XLM) to your account. You can buy lumens (XLM) from an exchange and send them to your address.
+        To use your ION account, you must activate it by sending at least 5 IONX to your account. You can buy IONX from an exchange and send them to your address.
       </Loading></Generic>
     } else if (state === 'loading') {
       return <Generic title="Loading account"><Loading>Contacting network and loading account<Ellipsis /></Loading></Generic>
     } else if (state === 'in') {
-      if (!d.session.inflationDone) {
-        let currentVoteNote = '';
-        if (d.session.account.inflation_destination) {
-          currentVoteNote = ' This will overwrite your current inflation destination vote.'
-        }
-        return <div>
-          <Generic>
-            <h2 className="Session__welcomeTitle">Welcome to StellarTerm!</h2>
-            <p>Please make sure you have keys securely backed up. Never share your secret key or recovery phrase with anyone.</p>
-            <div className="Generic__divider"></div>
-            <div className="Session__inflation">
-              StellarTerm is free open source software. StellarTerm does not ask for donations, but instead, asks for inflation votes. The Stellar network rewards accounts that receive many votes through an "<a href="https://www.stellar.org/developers/guides/concepts/inflation.html" target="_blank" rel="nofollow noopener noreferrer">inflation system</a>". It is free to vote for StellarTerm and only requires a vote transaction (0.00001 XLM). Note: other wallets may do this without your permission, so if you use another wallet and they tamper with your account, this message may show up again.
-              <br />
-              <br />
-              By pressing "Accept and Continue", your account will vote for the StellarTerm inflation account. Thank you for your support!{currentVoteNote}
-              <div className="Session__inflation__next">
-                <a className="Session__inflation__next__noThanks" onClick={d.session.handlers.noThanks}>No thanks</a>
-                <button className="s-button" onClick={d.session.handlers.voteContinue}>Accept and Continue</button>
-              </div>
-            </div>
-          </Generic>
-        </div>
-      }
       let content;
       let part1 = this.props.urlParts[1];
 

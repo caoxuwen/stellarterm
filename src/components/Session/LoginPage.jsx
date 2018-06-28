@@ -101,7 +101,7 @@ export default class LoginPage extends React.Component {
     let newKeypairDetails;
     if (this.state.newKeypair !== null) {
       newKeypairDetails = <div className="LoginPage__generatedNote">
-        <p><strong>Keep your key secure. This secret key will only be showed to you once. StellarTerm does not save it and will not be able to help you recover it if lost.</strong></p>
+        <p><strong>Keep your key secure. This secret key will only be showed to you once. ION does not save it and will not be able to help you recover it if lost.</strong></p>
         <p>Public key (will be your Account ID): {this.state.newKeypair.pubKey}</p>
         <p>Secret key (<strong>SAVE THIS AND KEEP THIS SECURE</strong>): <span className="clickToSelect" onClick={clickToSelect}>{this.state.newKeypair.secretKey}</span></p>
       </div>
@@ -111,7 +111,7 @@ export default class LoginPage extends React.Component {
 
     let acceptTerms = <label className="s-inputGroup LoginPage__accept">
         <input className="LoginPage__accept__checkbox" type="checkbox" checked={this.state.termsAccepted} onClick={() => this.setState({termsAccepted: !this.state.termsAccepted})} />
-        <span className="LoginPage__accept__label">I accept the <a href="#terms-of-use" className="LoginPage__accept__link">Terms of Use</a>, understand the risks associated with cryptocurrencies, and know that StellarTerm does not issue or endorse any asset on the Stellar network.</span>
+        <span className="LoginPage__accept__label">I accept the <a href="#terms-of-use" className="LoginPage__accept__link">Terms of Use</a>, understand the risks associated with cryptocurrencies.</span>
       </label>
 
     let body;
@@ -138,10 +138,9 @@ export default class LoginPage extends React.Component {
           <div className="LoginPage__notes">
             <h3>Security notes</h3>
             <ul>
+              <li>This is alpha software, so don't use your real keys.</li>
               <li>Check the url to make sure you are on the correct website.</li>
-              <li>Stellarterm does not save your secret key. It is stored on your browser and will be deleted once the page is refreshed or exited.</li>
-              <li>For extra security, you can <a href="https://github.com/stellarterm/stellarterm" target="_blank" rel="nofollow noopener noreferrer">build from source</a> or <a href="https://github.com/stellarterm/stellarterm.github.io/" target="_blank" rel="nofollow noopener noreferrer">download from GitHub</a> and verify the hash.</li>
-              <li>StellarTerm is released under the Apache 2.0. It is provided "AS IS" without warranty. The developer is not responsible for any losses and activities caused by the application.</li>
+              <li>ION  does not save your secret key. It is stored on your browser and will be deleted once the page is refreshed or exited.</li>
             </ul>
           </div>
         </div>
@@ -151,7 +150,7 @@ export default class LoginPage extends React.Component {
         <div className="LoginPage__greenBox">
           <div className="LoginPage__form">
             <h3>Create Account Keypair</h3>
-            <p>To get started on using the Stellar network, you must first create a keypair (unless you have a Ledger Nano). The keypair consists of two parts:</p>
+            <p>To get started on using the ION network, you must first create a keypair (unless you have a Ledger Nano). The keypair consists of two parts:</p>
             <ul className="LoginPage__form__list">
               <li><strong>Public key</strong>: The public key is used to identify the account. It is also known as an account. This public key is used for receiving funds.</li>
               <li><strong>Secret key</strong>: The secret key is used to access your account and make transactions. Keep this code safe and secure. Anyone with the code will have full access to the account and funds. If you lose the key, you will no longer be able to access the funds and there is no recovery mechanism.</li>
@@ -216,7 +215,7 @@ export default class LoginPage extends React.Component {
         </div>
       } else if (window.location.protocol !== 'https:') {
         loginForm = <div className="LoginPage__form LoginPage__form--simpleMessage">
-          <p className="LoginPage__form--title">Ledger only works on a https site.<br />Please use <a href="https://stellarterm.com/" target="_blank" rel="nofollow noopener noreferrer">https://stellarterm.com/</a></p>
+          <p className="LoginPage__form--title">Ledger only works on a https site.<br />Please use <a href="https://ion.one/" target="_blank" rel="nofollow noopener noreferrer">https://ion.one/</a></p>
         </div>
       } else if (!d.session.ledgerConnected) {
         loginForm = <div className="LoginPage__form LoginPage__form--simpleMessage">
@@ -243,6 +242,7 @@ export default class LoginPage extends React.Component {
         <div className="LoginPage__paddedBox">
           <h3>Setup instructions</h3>
           <ol>
+	    <li>This feature is just a placeholder for now. Please DO NOT use.</li>
             <li>Get a Ledger Nano S and connect it to your computer.</li>
             <li>Set up your Ledger Nano S by following instructions on the Ledger site: <a href="https://www.ledgerwallet.com/start/ledger-nano-s" target="_blank" rel="nofollow noopener noreferrer">https://www.ledgerwallet.com/start/ledger-nano-s</a></li>
             <li>Install the <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">Ledger Manager</a> app on your computer: <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">https://www.ledgerwallet.com/apps/manager</a></li>
