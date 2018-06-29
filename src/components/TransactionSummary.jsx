@@ -20,7 +20,7 @@ const operationsMap = {
   pathPayment: {
     name: 'pathPayment',
     label: 'Path Payment',
-    helpNote: 'Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 XLM) to be different from the asset received (e.g, 6 BTC).',
+    helpNote: 'Sends an amount in a specific asset to a destination account through a path of offers. This allows the asset sent (e.g., 450 IONX) to be different from the asset received (e.g, 6 BTC).',
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment',
   },
   manageOffer: {
@@ -56,7 +56,7 @@ const operationsMap = {
   accountMerge: {
     name: 'accountMerge',
     label: 'Account Merge',
-    helpNote: 'Transfers the native balance (the amount of XLM an account holds) to another account and removes the source account from the ledger.',
+    helpNote: 'Transfers the native balance (the amount of IONX an account holds) to another account and removes the source account from the ledger.',
     docsUrl: 'https://www.stellar.org/developers/learn/concepts/list-of-operations.html#account-merge',
   },
   inflation: {
@@ -200,7 +200,7 @@ export default function TransactionSummary(props) {
         Network Fee
       </div>
       <div className="TransactionSummary__row__content">
-        {new BigNumber(tx.fee).dividedBy(10000000).toString()} XLM <strong>{tx.fee <= 100 ? '(~$0.00)' : ''}</strong>
+        {new BigNumber(tx.fee).dividedBy(10000000).toString()} IONX <strong>{tx.fee <= 100 ? '(~$0.00)' : ''}</strong>
       </div>
     </div>
     <div key="table_memo" className="TransactionSummary__row">

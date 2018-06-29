@@ -37,7 +37,7 @@ export default class MinBalance extends React.Component {
             <tr>
               <td className="MinBalance__table__type">Entry type</td>
               <td>#</td>
-              <td className="MinBalance__table__lumens">XLM</td>
+              <td className="MinBalance__table__lumens">IONX</td>
             </tr>
           </thead>
           <tbody>
