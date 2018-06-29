@@ -26,7 +26,7 @@ export default class BalancesTable extends React.Component {
         });
         if (tickerAsset) {
           balanceUSD = '$' + (balance.balance * tickerAsset.price_USD).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-          if (tickerAsset.slug !== 'XLM-native') {
+          if (tickerAsset.slug !== 'IONX-native') {
             tradeLink = <a href={'#exchange/' + tickerAsset.topTradePairSlug} className="BalancesTable__row__trade">trade</a>
           }
         } else {
@@ -56,7 +56,7 @@ export default class BalancesTable extends React.Component {
         <tr className="BalancesTable__head">
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__asset">Asset</td>
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount">Balance</td>
-          <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount">Value (USD)</td>
+          <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount">Value (USDI)</td>
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount"></td>
         </tr>
       </thead>

@@ -15,7 +15,7 @@ export default class AddTrustFromDirectory extends React.Component {
     if (ticker.ready) {
       for (let i in ticker.data.assets) {
         let tickerAsset = ticker.data.assets[i];
-        if (tickerAsset.id !== 'XLM-native') {
+        if (tickerAsset.id !== 'IONX-native') {
           added[tickerAsset.id] = true;
           let sdkAsset = new StellarSdk.Asset(tickerAsset.code, tickerAsset.issuer);
           rows.push(<AddTrustRow key={tickerAsset.id} d={this.props.d} asset={sdkAsset}></AddTrustRow>);

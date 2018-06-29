@@ -177,8 +177,8 @@ class TermApp extends React.Component {
           body = <Generic title="Loading orderbook">Loading</Generic>
         } else {
           // Default to a market with good activity
-          let baseBuying = new StellarSdk.Asset('MOBI', 'GA6HCMBLTZS5VYYBCATRBRZ3BZJMAFUDKYYF6AH6MVCMGWMRDNSWJPIH');
-          let counterSelling = StellarSdk.Asset.native();
+          let baseBuying = new StellarSdk.Asset('ETHI', 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA');
+          let counterSelling = new StellarSdk.Asset('USDI', 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA');
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {

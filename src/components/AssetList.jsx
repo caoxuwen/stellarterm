@@ -20,7 +20,7 @@ export default class AssetList extends React.Component {
   }
   render() {
     if (!this.dTicker.ready) {
-      return <Loading size="large">Loading Stellar market data<Ellipsis /></Loading>
+      return <Loading size="large">Loading ION market data<Ellipsis /></Loading>
     }
 
     let rows = [];
@@ -63,7 +63,6 @@ export default class AssetList extends React.Component {
 
       rows.push(<a href={'#exchange/' + asset.topTradePairSlug} key={'asset-' + asset.id} className="AssetList__asset">
         <div className="AssetList__asset__assetCard"><AssetCard2 code={asset.code} issuer={asset.issuer} boxy={false}></AssetCard2></div>
-        <div className="AssetList__asset__amount">{priceXLM}{Printify.lighten(' XLM')}</div>
         <div className="AssetList__asset__amount">{priceUSD}</div>
         <div className="AssetList__asset__amount">{volume24h}</div>
         <div className="AssetList__asset__amount">{change24h}</div>
@@ -75,8 +74,7 @@ export default class AssetList extends React.Component {
       <div className="AssetList">
         <div className="AssetList__head__row">
           <div className="AssetList__head__cell AssetList__head__asset">Asset</div>
-          <div className="AssetList__head__cell AssetList__head__amount">Price (XLM)</div>
-          <div className="AssetList__head__cell AssetList__head__amount">Price (USD)</div>
+          <div className="AssetList__head__cell AssetList__head__amount">Price (USDI)</div>
           <div className="AssetList__head__cell AssetList__head__amount">Volume (24h)</div>
           <div className="AssetList__head__cell AssetList__head__amount">Change (24h)</div>
         </div>

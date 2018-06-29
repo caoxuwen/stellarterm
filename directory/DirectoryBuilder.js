@@ -25,15 +25,17 @@ function DirectoryBuilder() {
 
   // Special anchors aren't really anchors at all!
   this.nativeAnchor = {
-    name: 'Stellar Network',
-    website: 'https://www.stellar.org/lumens/',
-    logo: logos['stellar'],
+    name: 'ION',
+    website: 'https://ion.one',
     color: '#08b5e5',
   };
   this.nativeAsset = {
-    code: 'XLM',
+    code: 'IONX',
     issuer: null,
-    domain: 'native',
+      domain: 'native',
+      summary: 'ION exchange token',
+      detail: 'pay exchange taker fee, franchise fee with IONX',
+      topTradePairSlug: 'IONX-native/ETHI-ion.one'
   };
 
   this.unknownAnchor = {
@@ -51,9 +53,10 @@ DirectoryBuilder.prototype.addAnchor = function(details) {
   if (this.anchors[details.domain] !== undefined) {
     throw new Error('Duplicate anchor in directory: ' + details.domain);
   }
+    /*
   if (logos[details.logo] === undefined) {
     throw new Error('Missing logo file: ' + details.logo);
-  }
+  }*/
   if (details.website.indexOf('http://') !== -1) {
     throw new Error('Website URL must use https://');
   }
@@ -68,7 +71,6 @@ DirectoryBuilder.prototype.addAnchor = function(details) {
     name: details.domain,
     displayName: details.displayName,
     website: details.website,
-    logo: logos[details.logo],
     assets: {},
   }
 
@@ -109,7 +111,10 @@ DirectoryBuilder.prototype.addAsset = function(anchorDomain, details) {
   this.assets[slug] = {
     code: details.code,
     issuer: details.issuer,
-    domain: anchorDomain,
+      domain: anchorDomain,
+      summary: details.summary,
+      detail: details.detail,
+      topTradePairSlug: details.topTradePairSlug
   };
   if (details.instructions) {
     this.assets[slug]['instructions'] = details.instructions;
@@ -276,7 +281,7 @@ DirectoryBuilder.prototype.getAnchor = function(domain) {
 
 // Returns null if asset is not found
 DirectoryBuilder.prototype.getAssetByDomain = function(code, domain) {
-  if (code === 'XLM' && domain === 'native') {
+  if (code === 'IONX' && domain === 'native') {
     return this.nativeAsset;
   }
   if (!this.anchors.hasOwnProperty(domain)) {
@@ -304,7 +309,7 @@ DirectoryBuilder.prototype.getAssetByDomain = function(code, domain) {
 
 // Returns unknown if asset is not found
 DirectoryBuilder.prototype.getAssetByAccountId = function(code, issuer) {
-  if (code === 'XLM' && issuer === null) {
+  if (code === 'IONX' && issuer === null) {
     return this.nativeAsset;
   }
 

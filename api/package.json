@@ -10,6 +10,6 @@
     "p-queue": "^2.1.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "stellar-sdk": "^0.8.0"
+    "ion-sdk": "^0.9.3"
   }
 }

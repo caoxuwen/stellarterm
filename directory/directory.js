@@ -21,6 +21,70 @@ directory.DirectoryBuilder = DirectoryBuilder;
 // });
 
 directory.addAnchor({
+  domain: 'ion.one',
+  website: 'https://ion.one',
+  logo: 'ion.one',
+  color: '#08b5e5',
+  displayName: 'ION',
+});
+
+directory.addAsset('ion.one', {
+  code: 'ETHI',
+  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  instructions: 'https://ion.one',
+    type: 'token',
+    summary: 'ETH ionized',
+    detail: 'corresponds 1:1 to Ethereum, deposit through atomic swap',
+    topTradePairSlug: 'ETHI-ion.one/USDI-ion.one'
+});
+
+directory.addAsset('ion.one', {
+  code: 'USDI',
+  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  instructions: 'https://ion.one',
+    type: 'token',
+    summary: 'USD ionized',
+    detail: 'pegs to USD price through funding between longs and shorts',
+    topTradePairSlug: 'USDI-ion.one/ETHI-ion.one'
+});
+
+directory.addAsset('ion.one', {
+  code: 'ION1',
+  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  instructions: 'https://ion.one',
+    type: 'token',
+    summary: 'stablecoin',
+    detail: 'withdraw to use as ERC20 token',
+    topTradePairSlug: 'ION1-ion.one/USDI-ion.one'
+});
+
+directory.addPair({
+  baseBuying: ['ETHI', 'ion.one'],
+  counterSelling: ['USDI', 'ion.one'],
+});
+
+directory.addPair({
+  baseBuying: ['USDI', 'ion.one'],
+  counterSelling: ['IONX', 'native'],
+});
+
+directory.addPair({
+  baseBuying: ['USDI', 'ion.one'],
+  counterSelling: ['ION1', 'ion.one'],
+});
+
+directory.addPair({
+  baseBuying: ['ETHI', 'ion.one'],
+  counterSelling: ['IONX', 'native'],
+});
+
+directory.addPair({
+  baseBuying: ['ION1', 'ion.one'],
+  counterSelling: ['IONX', 'native'],
+});
+
+/*
+directory.addAnchor({
   domain: 'ximcoin.com',
   website: 'https://ximcoin.com',
   logo: 'ximcoin.com',
@@ -1069,15 +1133,15 @@ directory.addDestination('GDRSWSKJCIB6Z65UA7W5RG62A7M5K3A5IHMED6DYHLPLWLVQCOOGDQ
   name: 'Gate.io',
   requiredMemoType: 'MEMO_ID',
 });
+*/
 
 // Assert that each asset has a trading pair
 let remainingAssets = Object.assign({}, directory.assets);
-
 for (let pairId in directory.pairs) {
   let pair = directory.pairs[pairId];
-  if (pair.baseBuying.code === 'XLM' && pair.baseBuying.issuer === null) {
+  if (pair.baseBuying.code === 'IONX' && pair.baseBuying.issuer === null) {
     delete remainingAssets[pair.counterSelling.code + '-' + pair.counterSelling.issuer];
-  } else if (pair.counterSelling.code === 'XLM' && pair.counterSelling.issuer === null) {
+  } else if (pair.counterSelling.code === 'IONX' && pair.counterSelling.issuer === null) {
     delete remainingAssets[pair.baseBuying.code + '-' + pair.baseBuying.issuer];
   }
 }

@@ -269,7 +269,7 @@ export default class OfferMaker extends React.Component {
         </div>;
       } else if (this.state.errorType === 'tx_bad_seq') {
         error = <div className="s-alert s-alert--alert OfferMaker__message">
-          Transaction failed because sequence got out of sync. Please reload StellarTerm and try again.
+          Transaction failed because sequence got out of sync. Please reload the page and try again.
         </div>;
       } else {
         error = <div className="s-alert s-alert--alert OfferMaker__message">Failed to create offer.

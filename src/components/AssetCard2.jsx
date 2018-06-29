@@ -30,7 +30,7 @@ export default class AssetCard2 extends React.Component {
     }
 
     let asset = {};
-    if (this.props.code === 'XLM' && this.props.domain === undefined && this.props.issuer === undefined) {
+    if (this.props.code === 'IONX' && this.props.domain === undefined && this.props.issuer === undefined) {
       asset = directory.nativeAsset;
     } else {
       if (this.props.domain !== undefined) {
@@ -58,13 +58,15 @@ export default class AssetCard2 extends React.Component {
     // Unlike AssetCard (original), this one does not link to the domain. Users can simply type it in the address bar
 
     let assetCardMain = <div className="AssetCard2__main" style={backgroundStyle}>
-      <img className="AssetCard2__logo" src={anchor.logo}></img>
+      {/*<img className="AssetCard2__logo" src={anchor.logo}></img>*/}
       <div className="AssetCard2__content">
         <div className="AssetCard2__header">
           <span className="AssetCard2__header__code">{asset.code}</span>
-          <span className="AssetCard2__header__domain">{anchor.name}</span>
+          {/*<span className="AssetCard2__header__domain">{anchor.name}</span>*/}
+          <span className="AssetCard2__header__domain"> {asset.summary}</span>	  	  
         </div>
-        <p className="AssetCard2__issuerAccountId">Issuer (<strong>not you</strong>): {issuerAccountId}</p>
+        {/*<p className="AssetCard2__issuerAccountId">Issuer (<strong>not you</strong>): {issuerAccountId}</p>*/}
+	<p className="AssetCard2__issuerAccountId"> {asset.detail}</p>
       </div>
     </div>
 

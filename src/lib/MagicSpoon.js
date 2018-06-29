@@ -68,7 +68,7 @@ const MagicSpoon = {
             return;
           }
           return nativeBalances.push({
-            code: 'XLM',
+            code: 'IONX',
             issuer: null,
             balance: sdkBalance.balance,
             sdkBalance,
