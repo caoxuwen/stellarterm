@@ -13,6 +13,10 @@ const MagicSpoon = {
     let sdkAccount = await Server.loadAccount(keypair.publicKey());
     this.bip32Path = opts.bip32Path;
 
+    sdkAccount.getKeypair = () => {
+       return keypair;
+    };
+
     sdkAccount.signWithLedger = transaction => {
       console.log('Sending to Ledger to sign');
       return new StellarLedger.Api(new StellarLedger.comm(Number.MAX_VALUE)).signTx_async(this.bip32Path, transaction).then((result) => {

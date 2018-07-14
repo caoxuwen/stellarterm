@@ -56,7 +56,7 @@ class Session extends React.Component {
       </Loading></Generic>
     } else if (state === 'loading') {
       return <Generic title="Loading account"><Loading>Contacting network and loading account<Ellipsis /></Loading></Generic>
-    } else if (state === 'in') {
+    } else if (state === 'in') {      
       let content;
       let part1 = this.props.urlParts[1];
 
@@ -69,6 +69,17 @@ class Session extends React.Component {
             </div>
             <p>To receive payments, share your account ID with them (begins with a G).</p>
           </Generic>
+	  <div className="so-back islandBack">
+            <div className="island">
+	    <div className="Generic__content">
+              <div className="s-alert s-alert--primary">
+                <p className="Sesssion__yourId__title">Your Ethereum (Rinkeby) deposit address</p>
+                <strong className="clickToSelect Sesssion__ethaddr" onClick={clickToSelect} id="ethaddr">{this.props.d.session.ethaddr}</strong>
+              </div>
+              <p>Deposited Ethereum will show up as ETHI in your account below</p>
+	    </div>
+	    </div>
+	  </div>
           <AccountView d={d}></AccountView>
         </ErrorBoundary>
       } else if (part1 === 'addTrust') {

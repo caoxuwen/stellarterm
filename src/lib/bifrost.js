@@ -15,7 +15,7 @@ const ProtocolVersion = 2;
 const ChainBitcoin = 'bitcoin';
 const ChainEthereum = 'ethereum';
 
-export class Session {
+export default class BridgeSession {
   constructor(params) {
     this._checkParams(params);
     this.params = params;

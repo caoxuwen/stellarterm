@@ -6,6 +6,8 @@ import Stellarify from '../Stellarify';
 import directory from '../../directory';
 import Validate from '../Validate';
 import Event from '../Event';
+import BridgeSession from '../bifrost';
+
 const StellarLedger = window.StellarLedger;
 
 let DEVELOPMENT_TO_PROMPT = true;
@@ -21,7 +23,6 @@ export default function Send(driver) {
     this.ledgerConnected = false;
 
     this.unfundedAccountId = '';
-    this.inflationDone = false;
     this.account = null; // MagicSpoon.Account instance
     this.authType = ''; // '', 'secret', 'ledger', 'pubkey'
   };
@@ -97,47 +98,63 @@ export default function Send(driver) {
       }
     },
     logIn: async (keypair, opts) => {
-      this.setupError = false;
-      if (this.state !== 'unfunded') {
-        this.state = 'loading';
-        this.event.trigger();
-      }
-
-      try {
-        this.account = await MagicSpoon.Account(driver.Server, keypair, opts, () => {
-          this.event.trigger();
-        });
-        this.state = 'in';
-        this.authType = opts.authType;
-
-        let inflationDoneDestinations = {
-          'GDCHDRSDOBRMSUDKRE2C4U4KDLNEATJPIHHR2ORFL5BSD56G4DQXL4VW': true,
-          'GCCD6AJOYZCUAQLX32ZJF2MKFFAUJ53PVCFQI3RHWKL3V47QYE2BNAUT': true,
-        };
-
-        if (inflationDoneDestinations[this.account.inflation_destination]) {
-          this.inflationDone = true;
-        }
-        this.event.trigger();
-      } catch (e) {
-        if (e.data) {
-          this.state = 'unfunded';
-          this.unfundedAccountId = keypair.publicKey();
-          setTimeout(() => {
-            console.log('Checking to see if account has been created yet');
-            if (this.state === 'unfunded') {
-              // Avoid race conditions
-              this.handlers.logIn(keypair, opts);
+	this.setupError = false;
+	if (this.state !== 'unfunded') {
+            this.state = 'loading';
+            this.event.trigger();
+	}
+	
+	try {
+            this.account = await MagicSpoon.Account(driver.Server, keypair, opts, () => {
+		this.event.trigger();
+            });
+            this.state = 'in';
+            this.authType = opts.authType;
+	    
+	    //this.props.d.session.account.accountId();
+	    const params = {
+		network: 'Test ION Network ; June 2018',
+		horizonURL: 'https://api.ion.one',
+		bifrostURL: 'https://bridge.ion.one'
+	    };
+	    this.bridgesession = new BridgeSession(params);
+	    this.onEvent = function(event, data) {};
+	    this.ethaddr = "Loading...";
+	    
+	    if (this.account) {
+		let keypair = this.account.getKeypair();
+		if (keypair) {
+		    this.bridgesession.startEthereum(keypair, this.onEvent).then(params => {
+			if (params.address == this.ethaddr)
+			    return;
+			this.ethaddr = params.address;
+			this.event.trigger();
+		    }).catch(err => {
+			console.err(err);
+		    });
+		}
+	    }
+	    	    	    
+            this.event.trigger();
+	} catch (e) {
+            if (e.data) {
+		this.state = 'unfunded';
+		this.unfundedAccountId = keypair.publicKey();
+		setTimeout(() => {
+		    console.log('Checking to see if account has been created yet');
+		    if (this.state === 'unfunded') {
+			// Avoid race conditions
+			this.handlers.logIn(keypair, opts);
+		    }
+		}, 2000);
+		this.event.trigger();
+		return;
             }
-          }, 2000);
-          this.event.trigger();
-          return;
-        }
-        console.log(e);
-        this.state = 'out';
-        this.setupError = true;
-        this.event.trigger();
-      }
+            console.log(e);
+            this.state = 'out';
+            this.setupError = true;
+            this.event.trigger();
+	}
     },
 
     // Using buildSignSubmit is the preferred way to go. It handles sequence numbers correctly.
@@ -145,10 +162,6 @@ export default function Send(driver) {
     // The reason this doesn't take in a TransactionBuilder so we can call build() here is that there
     // are cases when we want to paste in a raw transaction and sign that
     sign: async (tx) => {
-      if (this.account.inflation_destination === 'GDCHDRSDOBRMSUDKRE2C4U4KDLNEATJPIHHR2ORFL5BSD56G4DQXL4VW') {
-        console.log('Signing tx\nhash:', tx.hash().toString('hex'),'\nsequence: ' + tx.sequence, '\n\n' + tx.toEnvelope().toXDR('base64'))
-        console.log('https://www.stellar.org/laboratory/#txsigner?xdr=' + encodeURIComponent(tx.toEnvelope().toXDR('base64')) + '&network=public');
-      }
       if (this.authType === 'secret') {
         this.account.signWithSecret(tx);
         console.log('Signed tx\nhash:', tx.hash().toString('hex'),'\n\n' + tx.toEnvelope().toXDR('base64'))

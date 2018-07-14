@@ -95,14 +95,14 @@ export default class LoginPage extends React.Component {
     if (this.state.invalidKey) {
       errorMessage = <div className="s-alert s-alert--alert">Invalid secret key. Hint: it starts with the letter S and is all uppercase</div>
     } else if (this.props.setupError) {
-      errorMessage = <div className="s-alert s-alert--alert">Unable to contact network. Please check your internet connection and allow connections to horizon.stellar.org. Maybe an adblocker or plugin (such as Privacy Badger) is preventing the client from communicating with the network.</div>
+      errorMessage = <div className="s-alert s-alert--alert">Unable to login. <strong>Please note your account have to have a minimum balance before it is properly setup in ION network.</strong></div>
     }
 
     let newKeypairDetails;
     if (this.state.newKeypair !== null) {
       newKeypairDetails = <div className="LoginPage__generatedNote">
-        <p><strong>Keep your key secure. This secret key will only be showed to you once. ION does not save it and will not be able to help you recover it if lost.</strong></p>
-        <p>Public key (will be your Account ID): {this.state.newKeypair.pubKey}</p>
+        <p><strong>Keep your key secure. ION does not save it and will not be able to help you recover it if lost.</strong></p>
+        <p>Public key (will be your <strong>Account ID</strong>): {this.state.newKeypair.pubKey}</p>
         <p>Secret key (<strong>SAVE THIS AND KEEP THIS SECURE</strong>): <span className="clickToSelect" onClick={clickToSelect}>{this.state.newKeypair.secretKey}</span></p>
       </div>
     }
@@ -280,7 +280,7 @@ export default class LoginPage extends React.Component {
         <div className="LoginPage">
           <div className="LoginPage__sidebar">
             <a className={'LoginPage__sidebar__tab' + (this.props.urlParts[0] === 'signup' ? ' is-active' : '')} href="#signup">
-              New account
+              New keypair
             </a>
             <a className={'LoginPage__sidebar__tab' + (this.props.urlParts[0] === 'account' ? ' is-active' : '')} href="#account">
               Log in with key
