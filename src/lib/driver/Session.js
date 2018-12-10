@@ -61,13 +61,13 @@ export default function Send(driver) {
 
   this.handlers = {
     logInWithSecret: async (secretKey) => {
-      let keypair = StellarSdk.Keypair.fromSecret(secretKey);
+      let keypair = IONSdk.Keypair.fromSecret(secretKey);
       return this.handlers.logIn(keypair, {
         authType: 'secret',
       });
     },
     logInWithPublicKey: async (accountId) => {
-      let keypair = StellarSdk.Keypair.fromPublicKey(accountId);
+      let keypair = IONSdk.Keypair.fromPublicKey(accountId);
       return this.handlers.logIn(keypair, {
         authType: 'pubkey',
       });
@@ -76,7 +76,7 @@ export default function Send(driver) {
       try {
         let connectionResult = await new StellarLedger.Api(new StellarLedger.comm(4)).getPublicKey_async(bip32Path)
         this.setupLedgerError = null;
-        let keypair = StellarSdk.Keypair.fromPublicKey(connectionResult.publicKey);
+        let keypair = IONSdk.Keypair.fromPublicKey(connectionResult.publicKey);
         return this.handlers.logIn(keypair, {
           authType: 'ledger',
           bip32Path,
@@ -256,14 +256,14 @@ export default function Send(driver) {
       // We only add max trust line
       // Having a "limit" is a design mistake in Stellar that was carried over from the Ripple codebase
       let tx = MagicSpoon.buildTxChangeTrust(driver.Server, this.account, {
-        asset: new StellarSdk.Asset(code, issuer),
+        asset: new IONSdk.Asset(code, issuer),
       });
       return await this.handlers.buildSignSubmit(tx);
     },
     removeTrust: async (code, issuer) => {
       // Trust lines are removed by setting limit to 0
       let tx = MagicSpoon.buildTxChangeTrust(driver.Server, this.account, {
-        asset: new StellarSdk.Asset(code, issuer),
+        asset: new IONSdk.Asset(code, issuer),
         limit: '0',
       });
       return await this.handlers.buildSignSubmit(tx);

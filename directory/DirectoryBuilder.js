@@ -3,7 +3,7 @@ let logos = require('./logos');
 // in the StellarTerm client without webpack
 
 // Constraints: Data should be easily serializable into JSON (no references to each other)
-// directory.js should not depend on creating objects with StellarSdk (though its methods should support reading them)
+// directory.js should not depend on creating objects with IONSdk (though its methods should support reading them)
 
 // Note: the DirectoryBuilder concept of slug is slightly different from that of Stellarify
 // slugs here can only have the format `code-accountId`
@@ -261,18 +261,18 @@ DirectoryBuilder.prototype.getAnchor = function(domain) {
   return this.unknownAnchor;
 }
 
-// DEPRECATED so that we won't have a external dependency of StellarSdk
+// DEPRECATED so that we won't have a external dependency of IONSdk
 // getAsset() is general and takes in any of the combination:
 // - code:string, issuerAccountId:string
 // - code:string, anchorDomain:string
-// - sdkAsset:StellarSdk.Asset
+// - sdkAsset:IONSdk.Asset
 // All functions that are getAssset*() will return null if the asset is not found
 // getAsset(codeOrSdkAsset, domainOrAccountId) {
-//   if (codeOrSdkAsset instanceof StellarSdk.Asset) {
+//   if (codeOrSdkAsset instanceof IONSdk.Asset) {
 //     return this.getAssetBySdkAsset(codeOrSdkAsset);
 //   }
 
-//   if (StellarSdk.StrKey.isValidEd25519PublicKey(domainOrAccountId) ||
+//   if (IONSdk.StrKey.isValidEd25519PublicKey(domainOrAccountId) ||
 //      domainOrAccountId === null) {
 //     return this.getAssetByAccountId(codeOrSdkAsset, domainOrAccountId);
 //   }

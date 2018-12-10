@@ -49,9 +49,9 @@ const Validate = {
       if (!input.match(/^[0-9]*$/g)) {
         return resultError('MEMO_ID only accepts a positive integer.');
       }
-      if (input !== StellarSdk.UnsignedHyper.fromString(input).toString()) {
+      if (input !== IONSdk.UnsignedHyper.fromString(input).toString()) {
         return resultError(`MEMO_ID is an unsigned 64-bit integer and the max valid
-                       value is ${StellarSdk.UnsignedHyper.MAX_UNSIGNED_VALUE.toString()}`)
+                       value is ${IONSdk.UnsignedHyper.MAX_UNSIGNED_VALUE.toString()}`)
       }
       break;
     case 'MEMO_TEXT':
@@ -88,7 +88,7 @@ const Validate = {
     if (input === '') {
       return RESULT_EMPTY;
     }
-    if (!StellarSdk.StrKey.isValidEd25519PublicKey(input)) {
+    if (!IONSdk.StrKey.isValidEd25519PublicKey(input)) {
       return resultError('Invalid public key');
     }
     return RESULT_VALID;

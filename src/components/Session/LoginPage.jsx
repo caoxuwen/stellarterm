@@ -7,7 +7,7 @@ import clickToSelect from '../../lib/clickToSelect';
 // TODO: Move this into Validator
 const isValidSecretKey = input => {
   try {
-    StellarSdk.Keypair.fromSecret(input);
+    IONSdk.Keypair.fromSecret(input);
     return true;
   } catch (e) {
     // console.error(e);
@@ -71,7 +71,7 @@ export default class LoginPage extends React.Component {
       this.props.d.session.handlers.logInWithSecret(this.state.secretInput);
     }
     this.handleGenerate = event => {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = IONSdk.Keypair.random();
       this.setState({
         newKeypair: {
           pubKey: keypair.publicKey(),

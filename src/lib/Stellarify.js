@@ -12,31 +12,31 @@ const Stellarify = {
   asset(input) {
     // Horizon json asset
     if (input.asset_type === 'native') {
-      return new StellarSdk.Asset.native();
+      return new IONSdk.Asset.native();
     }
-    return new StellarSdk.Asset(input.asset_code, input.asset_issuer);
+    return new IONSdk.Asset(input.asset_code, input.asset_issuer);
   },
   assetToml(input) {
-    return new StellarSdk.Asset(input.code, input.issuer);
+    return new IONSdk.Asset(input.code, input.issuer);
   },
   memo(type, content) {
     // Type must not be none
     switch(type) {
     case 'MEMO_TEXT':
-      return StellarSdk.Memo.text(content);
+      return IONSdk.Memo.text(content);
     case 'MEMO_ID':
-      return StellarSdk.Memo.id(content);
+      return IONSdk.Memo.id(content);
     case 'MEMO_HASH':
-      return StellarSdk.Memo.hash(content);
+      return IONSdk.Memo.hash(content);
     case 'MEMO_RETURN':
-      return StellarSdk.Memo.returnHash(content);
+      return IONSdk.Memo.returnHash(content);
     default:
       throw new Error('Unknown Stellarify memo type. Got: ' + type);
     }
   },
   parseAssetSlug(slug) {
     // Takes in a URL part 'XLM-native' or 'USD-stellarterm.com'
-    // And converts it into a StellarSdk.Asset object
+    // And converts it into a IONSdk.Asset object
     // It will throw errors when it doesn't work
     // Will also do directory conversion
     if (!_.isString(slug)) {
@@ -60,7 +60,7 @@ const Stellarify = {
         console.error(`Native issuers must have XLM code`);
       }
       issuer = null;
-    } else if (!StellarSdk.StrKey.isValidEd25519PublicKey(issuer)) {
+    } else if (!IONSdk.StrKey.isValidEd25519PublicKey(issuer)) {
       // Since it's not a native asset and the issuer wasn't a public key,
       // it could be an asset issued. Lets try to resolve it!
       let asset = directory.getAssetByDomain(code, issuer);
@@ -69,7 +69,7 @@ const Stellarify = {
       }
     }
 
-    return new StellarSdk.Asset(code, issuer);
+    return new IONSdk.Asset(code, issuer);
   },
   assetToSlug(asset) {
     let resolvedAsset = directory.getAssetBySdkAsset(asset);
@@ -79,7 +79,7 @@ const Stellarify = {
     return `${resolvedAsset.code}-${resolvedAsset.domain}`
   },
   pairToExchangeUrl(baseBuying, counterSelling) {
-    return `exchange/${this.assetToSlug(baseBuying)}/${this.assetToSlug(counterSelling)}`;
+    return `/${this.assetToSlug(baseBuying)}/${this.assetToSlug(counterSelling)}`;
   },
   isOfferRelevant(baseBuying, counterSelling, offer) {
     let offerBuying = this.asset(offer.buying);

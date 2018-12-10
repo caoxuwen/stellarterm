@@ -46,9 +46,10 @@ export default class OfferMaker extends React.Component {
         this.updateState('price', data.pickPrice);
       }
     });
-    this.sessionUnsub = this.props.d.session.event.sub(() => {this.forceUpdate()});
+    this.sessionUnsub = this.props.d.session.event.sub(() => { this.forceUpdate() });
 
-
+    this.isMarginTrade = this.props.margin;
+    this.maxLeverage = 10;
 
     this.state = {
       valid: false,
@@ -98,7 +99,7 @@ export default class OfferMaker extends React.Component {
 
         // TODO: truer valid
         state.valid = true;
-      } catch(e) {
+      } catch (e) {
         // Invalid input somewhere
       }
       this.setState(state);
@@ -111,55 +112,56 @@ export default class OfferMaker extends React.Component {
         price: this.state.price,
         amount: this.state.amount,
         total: this.state.total,
+        margin: this.isMarginTrade
       })
-      .then(signAndSubmitResult => {
-        if (signAndSubmitResult.status === 'finish') {
-          this.setState({
-            valid: false,
-            buttonState: 'pending',
-            amount: '',
-            total: '',
-            successMessage: '',
-            errorMessage: false,
-          });
-
-          signAndSubmitResult.serverResult
-          .then(result => {
+        .then(signAndSubmitResult => {
+          if (signAndSubmitResult.status === 'finish') {
             this.setState({
-              buttonState: 'ready',
-              successMessage: 'Offer successfully created',
-            })
-          })
-          .catch(result => {
-            let errorType;
-            try {
-              if (result.data === undefined) {
-                errorType = 'clientError - ' + result.message;
-              } else if (result.data && result.data.extras) {
-                if (result.data.extras.result_codes.operations === undefined) {
-                  errorType = result.data.extras.result_codes.transaction;
-                } else {
-                  // Common errors:
-                  // errorType = 'buy_not_authorized'
-                  // errorType = 'op_low_reserve'
-                  errorType = result.data.extras.result_codes.operations[0];
+              valid: false,
+              buttonState: 'pending',
+              amount: '',
+              total: '',
+              successMessage: '',
+              errorMessage: false,
+            });
+
+            signAndSubmitResult.serverResult
+              .then(result => {
+                this.setState({
+                  buttonState: 'ready',
+                  successMessage: 'Offer successfully created',
+                })
+              })
+              .catch(result => {
+                let errorType;
+                try {
+                  if (result.data === undefined) {
+                    errorType = 'clientError - ' + result.message;
+                  } else if (result.data && result.data.extras) {
+                    if (result.data.extras.result_codes.operations === undefined) {
+                      errorType = result.data.extras.result_codes.transaction;
+                    } else {
+                      // Common errors:
+                      // errorType = 'buy_not_authorized'
+                      // errorType = 'op_low_reserve'
+                      errorType = result.data.extras.result_codes.operations[0];
+                    }
+                  } else {
+                    errorType = 'unknownResponse - ' + e.message;
+                  }
+                } catch (e) {
+                  console.error(e)
+                  errorType = 'unknownResponse - ' + e.message;
                 }
-              } else {
-                errorType = 'unknownResponse - ' + e.message;
-              }
-            } catch(e) {
-              console.error(e)
-              errorType = 'unknownResponse - ' + e.message;
-            }
 
-            this.setState({
-              buttonState: 'ready',
-              errorMessage: true,
-              errorType,
-            })
-          })
-        }
-      })
+                this.setState({
+                  buttonState: 'ready',
+                  errorMessage: true,
+                  errorType,
+                })
+              })
+          }
+        })
     }
   }
   render() {
@@ -216,7 +218,10 @@ export default class OfferMaker extends React.Component {
         } else {
           youHave = <div className="OfferMaker__youHave">You have {targetBalance} {targetAsset.getCode()}</div>;
         }
-        if (Number(inputSpendAmount) > Number(maxOffer)) {
+        if (this.isMarginTrade) { 
+          //TODO: calculate the limit
+        }
+        else if (Number(inputSpendAmount) > Number(maxOffer)) {
           insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough {targetAsset.getCode()} to create this offer.</p>;
         }
       } else {
@@ -297,7 +302,7 @@ export default class OfferMaker extends React.Component {
             asset={asset}
             message={asset.getCode() + " accepted"}
             trustMessage={"Accept " + asset.getCode()}
-            />
+          />
         })}
       </div>
     } else {
@@ -314,7 +319,7 @@ export default class OfferMaker extends React.Component {
 
     return <div>
       <h3 className="island__sub__division__title island__sub__division__title--left">{title}</h3>
-      <form onSubmit={this.handleSubmit}  disabled={!this.state.valid || this.state.buttonState === 'pending'}>
+      <form onSubmit={this.handleSubmit} disabled={!this.state.valid || this.state.buttonState === 'pending'}>
         <table className="OfferMaker__table">
           <tbody>
             <tr className="OfferMaker__table__row">

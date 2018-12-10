@@ -30,7 +30,7 @@ directory.addAnchor({
 
 directory.addAsset('ion.one', {
   code: 'ETHI',
-  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  issuer: window.stCustomConfig.assetIssuer,
   instructions: 'https://ion.one',
     type: 'token',
     summary: 'ETH ionized',
@@ -40,7 +40,7 @@ directory.addAsset('ion.one', {
 
 directory.addAsset('ion.one', {
   code: 'USDI',
-  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  issuer: window.stCustomConfig.assetIssuer,
   instructions: 'https://ion.one',
     type: 'token',
     summary: 'USD ionized',
@@ -50,7 +50,7 @@ directory.addAsset('ion.one', {
 
 directory.addAsset('ion.one', {
   code: 'ION1',
-  issuer: 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA',
+  issuer: window.stCustomConfig.assetIssuer,
   instructions: 'https://ion.one',
     type: 'token',
     summary: 'stablecoin',

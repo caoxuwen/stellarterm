@@ -17,7 +17,7 @@ export default class AddTrustFromDirectory extends React.Component {
         let tickerAsset = ticker.data.assets[i];
         if (tickerAsset.id !== 'IONX-native') {
           added[tickerAsset.id] = true;
-          let sdkAsset = new StellarSdk.Asset(tickerAsset.code, tickerAsset.issuer);
+          let sdkAsset = new IONSdk.Asset(tickerAsset.code, tickerAsset.issuer);
           rows.push(<AddTrustRow key={tickerAsset.id} d={this.props.d} asset={sdkAsset}></AddTrustRow>);
         }
       }
@@ -26,7 +26,7 @@ export default class AddTrustFromDirectory extends React.Component {
     _.each(directory.assets, assetObj => {
       let basicSlug = assetObj.code + '-' + assetObj.issuer;
       if (!(basicSlug in added)) {
-        let asset = new StellarSdk.Asset(assetObj.code, assetObj.issuer);
+        let asset = new IONSdk.Asset(assetObj.code, assetObj.issuer);
         rows.push(<AddTrustRow key={basicSlug} d={this.props.d} asset={asset}></AddTrustRow>);
       }
     })

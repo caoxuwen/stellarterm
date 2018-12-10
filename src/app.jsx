@@ -7,6 +7,7 @@ import AssetList from './components/AssetList.jsx';
 import Markets from './components/Markets.jsx';
 import Session from './components/Session.jsx';
 import Exchange from './components/Exchange.jsx';
+import Margin from './components/Margin.jsx';
 import Generic from './components/Generic.jsx';
 import Download from './components/Download.jsx';
 import Loading from './components/Loading.jsx';
@@ -29,7 +30,7 @@ if (window.location.hash === '#testnet') {
   network.isDefault = false;
   network.isTestnet = true;
   network.horizonUrl = 'https://horizon-testnet.stellar.org';
-  network.networkPassphrase = StellarSdk.Networks.TESTNET;
+  network.networkPassphrase = IONSdk.Networks.TESTNET;
 } else if (window.stCustomConfig.horizonUrl) {
   network.isDefault = false;
   network.isCustom = true;
@@ -39,7 +40,7 @@ if (window.location.hash === '#testnet') {
   }
 }
 
-StellarSdk.Network.use(new StellarSdk.Network(network.networkPassphrase));
+IONSdk.Network.use(new IONSdk.Network(network.networkPassphrase));
 
 let driver = new Driver({
   network,
@@ -68,7 +69,7 @@ class TermApp extends React.Component {
       this.setState({
         url: parseUrl(e.newURL)
       })
-    } , false);
+    }, false);
   }
 
   renderHomePageActions() {
@@ -104,7 +105,7 @@ class TermApp extends React.Component {
           <div className="so-back">
             <div className="HomePage__lead">
               <h2 className="HomePage__lead__title">Trade on the <a href="#exchange">ION Decentralized Exchange</a></h2>
-              <p className="HomePage__lead__summary">ION is a decentralized derivatives market, built with Stellar consensus protocol <br />Easily convert with stablecoin, Trade with leverage, <a href="https://explorer.ion.one" target="_blank" rel="nofollow noopener noreferrer">100% Transparency</a></p>
+              <p className="HomePage__lead__summary">ION is a decentralized derivatives market, built with SCP <br />No margin interest, Trade with leverage, <a href="https://explorer.ion.one" target="_blank" rel="nofollow noopener noreferrer">100% Transparency</a></p>
               {this.renderHomePageActions()}
             </div>
           </div>
@@ -125,7 +126,7 @@ class TermApp extends React.Component {
         body = <Generic title="Test network">
           You are running on the <a href="https://www.stellar.org/developers/guides/concepts/test-net.html" target="_blank" rel="nofollow noopener noreferrer">Stellar test network</a>. This network is for development purposes only and the test network may be occasionally reset.
           <br />
-          To create a test account on the test network, use the <a href="https://www.stellar.org/laboratory/#account-creator?network=test"  target="_blank" rel="nofollow noopener noreferrer">Friendbot to get some test lumens</a>.
+          To create a test account on the test network, use the <a href="https://www.stellar.org/laboratory/#account-creator?network=test" target="_blank" rel="nofollow noopener noreferrer">Friendbot to get some test lumens</a>.
         </Generic>
       } else {
         body = <Generic title="Please refresh the page to switch to testnet"><Loading darker={true}>
@@ -168,7 +169,7 @@ class TermApp extends React.Component {
       } else {
         if (this.d.orderbook.data.ready) {
           setTimeout(() => {
-            let newUrl = Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
+            let newUrl = 'exchange'+Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,
@@ -177,12 +178,49 @@ class TermApp extends React.Component {
           body = <Generic title="Loading orderbook">Loading</Generic>
         } else {
           // Default to a market with good activity
-          let baseBuying = new StellarSdk.Asset('ETHI', 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA');
-          let counterSelling = new StellarSdk.Asset('USDI', 'GDHXYFJQOENGL5FILWSCG2PFI3WJWVFU4S26RBFIS27H5KT3H6OJAXEA');
+          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer);
+          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer);
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {
-            let newUrl = Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
+            let newUrl = 'exchange'+Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
+            history.replaceState(null, null, '#' + newUrl);
+            this.setState({
+              url: newUrl,
+            })
+          }, 0);
+        }
+      }
+    } else if (urlParts[0] === 'margin') {
+      if (urlParts.length === 3) {
+        try {
+          let baseBuying = Stellarify.parseAssetSlug(urlParts[1]);
+          let counterSelling = Stellarify.parseAssetSlug(urlParts[2]);
+
+          this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
+          body = <Margin d={this.d}></Margin>
+        } catch (e) {
+          console.error(e);
+          body = <Generic title="Pick a market">Exchange url was invalid. To begin, go to the <a href="#markets">market list page</a> and pick a trading pair.</Generic>
+        }
+      } else {
+        if (this.d.orderbook.data.ready) {
+          setTimeout(() => {
+            let newUrl = 'margin'+Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
+            history.replaceState(null, null, '#' + newUrl);
+            this.setState({
+              url: newUrl,
+            })
+          }, 0);
+          body = <Generic title="Loading orderbook">Loading</Generic>
+        } else {
+          // Default to a market with good activity
+          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer);
+          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer);
+
+          this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
+          setTimeout(() => {
+            let newUrl = 'margin'+Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,

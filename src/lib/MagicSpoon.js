@@ -14,7 +14,7 @@ const MagicSpoon = {
     this.bip32Path = opts.bip32Path;
 
     sdkAccount.getKeypair = () => {
-       return keypair;
+      return keypair;
     };
 
     sdkAccount.signWithLedger = transaction => {
@@ -22,7 +22,7 @@ const MagicSpoon = {
       return new StellarLedger.Api(new StellarLedger.comm(Number.MAX_VALUE)).signTx_async(this.bip32Path, transaction).then((result) => {
         const signature = result.signature;
         const hint = keypair.signatureHint();
-        const decorated = new StellarSdk.xdr.DecoratedSignature({ hint, signature });
+        const decorated = new IONSdk.xdr.DecoratedSignature({ hint, signature });
         transaction.signatures.push(decorated);
         return transaction;
       })
@@ -37,7 +37,7 @@ const MagicSpoon = {
       return sdkAccount.balances[sdkAccount.balances.length - 1].balance;
     }
 
-    // Expects StellarSdk.Asset
+    // Expects IONSdk.Asset
     // Returns null if there is no trust
     // Returns string of balance if exists
     sdkAccount.getBalance = (targetAsset) => {
@@ -270,16 +270,16 @@ const MagicSpoon = {
     let smoothTrades = (trades) => {
       let result = [];
       for (let i = 2; i < trades.length; i++) {
-        let a = Number(trades[i-2][1]);
-        let b = Number(trades[i-1][1]);
-        let c = Number(trades[i  ][1]);
+        let a = Number(trades[i - 2][1]);
+        let b = Number(trades[i - 1][1]);
+        let c = Number(trades[i][1]);
 
-        let ratioA = c/a;
-        let ratioB = c/b;
-        let geometricAbsoluteDiffA = ratioA > 1 ? ratioA - 1 : 1/ratioA - 1;
-        let geometricAbsoluteDiffB = ratioB > 1 ? ratioB - 1 : 1/ratioB - 1;
+        let ratioA = c / a;
+        let ratioB = c / b;
+        let geometricAbsoluteDiffA = ratioA > 1 ? ratioA - 1 : 1 / ratioA - 1;
+        let geometricAbsoluteDiffB = ratioB > 1 ? ratioB - 1 : 1 / ratioB - 1;
         if (geometricAbsoluteDiffA > 0.3 && geometricAbsoluteDiffB > 0.3) {
-          result.push([trades[i][0], [a,b,c].sort()[1]]);
+          result.push([trades[i][0], [a, b, c].sort()[1]]);
         } else {
           result.push(trades[i]);
         }
@@ -304,7 +304,7 @@ const MagicSpoon = {
         depth += 1;
         let tradeResults;
         if (first) {
-          tradeResults = await Server.tradeAggregation(baseBuying, counterSelling, 1514764800, Date.now() + 86400000, 900000).limit(200).order('desc').call()
+          tradeResults = await Server.tradeAggregation(baseBuying, counterSelling, 1514764800, Date.now() + 86400000, 900000, 0).limit(200).order('desc').call()
           // tradeResults = await Server.trades().forAssetPair(baseBuying, counterSelling).limit(200).order('desc').call()
           first = false;
         } else {
@@ -340,8 +340,8 @@ const MagicSpoon = {
 
         // Potential optimization: If we load the horizon results into the array in the correct order
         // then sorting will run at near optimal runtime
-        result.sort((a,b) => {
-          return a[0]-b[0];
+        result.sort((a, b) => {
+          return a[0] - b[0];
         });
         if (!firstFullFetchFinished) {
           this.trades = smoothTrades(result);
@@ -361,7 +361,7 @@ const MagicSpoon = {
         if (!this.closed) {
           fetchManyTrades();
         }
-      }, 5*60*1000);
+      }, 5 * 60 * 1000);
     }
 
     fetchManyTrades();
@@ -373,8 +373,8 @@ const MagicSpoon = {
     // TODO: Close
   },
 
-  // opts.baseBuying -- StellarSdk.Asset (example: XLM)
-  // opts.counterSelling -- StellarSdk.Asset (example: USD)
+  // opts.baseBuying -- IONSdk.Asset (example: XLM)
+  // opts.counterSelling -- IONSdk.Asset (example: USD)
   // opts.price -- Exchange ratio selling/buying
   // opts.amount -- Here, it's relative to the base (JS-sdk does: Total amount selling)
   // opts.type -- String of either 'buy' or 'sell' (relative to base currency)
@@ -402,35 +402,48 @@ const MagicSpoon = {
       throw new Error(`Invalid side ${side}`);
     }
 
-    const operationOpts = {
-      buying: sdkBuying,
-      selling: sdkSelling,
-      amount: String(sdkAmount),
-      price: String(sdkPrice),
-      offerId: 0, // 0 for new offer
-    };
-    const transaction = new StellarSdk.TransactionBuilder(spoonAccount)
-      .addOperation(StellarSdk.Operation.manageOffer(operationOpts))
-      // DONT call .build()
+    const transaction = new IONSdk.TransactionBuilder(spoonAccount)
+
+    if (opts.margin) {
+      const operationOpts = {
+        buying: sdkBuying,
+        selling: sdkSelling,
+        amount: String(sdkAmount),
+        price: String(sdkPrice),
+      };
+
+      transaction.addOperation(IONSdk.Operation.createMarginOffer(operationOpts))
+    } {
+      const operationOpts = {
+        buying: sdkBuying,
+        selling: sdkSelling,
+        amount: String(sdkAmount),
+        price: String(sdkPrice),
+        offerId: 0, // 0 for new offer
+      };
+
+      transaction.addOperation(IONSdk.Operation.manageOffer(operationOpts))
+    }
+    // DONT call .build()
 
     return transaction;
   },
-  async buildTxSendPayment(Server, spoonAccount,  opts) {
+  async buildTxSendPayment(Server, spoonAccount, opts) {
     // sendPayment will detect if the account is a new account. If so, then it will
     // be a createAccount operation
-    let transaction = new StellarSdk.TransactionBuilder(spoonAccount)
+    let transaction = new IONSdk.TransactionBuilder(spoonAccount)
     try {
       let destAccount = await Server.loadAccount(opts.destination);
-      transaction = transaction.addOperation(StellarSdk.Operation.payment({
+      transaction = transaction.addOperation(IONSdk.Operation.payment({
         destination: opts.destination,
         asset: opts.asset,
         amount: opts.amount,
       }));
-    } catch(e) {
+    } catch (e) {
       if (!opts.asset.isNative()) {
         throw new Error('Destination account does not exist. To create it, you must send a minimum of 1 lumens to create it');
       }
-      transaction = transaction.addOperation(StellarSdk.Operation.createAccount({
+      transaction = transaction.addOperation(IONSdk.Operation.createAccount({
         destination: opts.destination,
         startingBalance: opts.amount,
       }));
@@ -443,8 +456,8 @@ const MagicSpoon = {
     return transaction;
   },
   buildTxSetInflation(spoonAccount, inflationDest) {
-    let transaction = new StellarSdk.TransactionBuilder(spoonAccount)
-    transaction = transaction.addOperation(StellarSdk.Operation.setOptions({
+    let transaction = new IONSdk.TransactionBuilder(spoonAccount)
+    transaction = transaction.addOperation(IONSdk.Operation.setOptions({
       inflationDest: inflationDest,
     }));
     // DONT call .build()
@@ -463,20 +476,20 @@ const MagicSpoon = {
       asset: opts.asset,
       limit: sdkLimit,
     };
-    return new StellarSdk.TransactionBuilder(spoonAccount)
-      .addOperation(StellarSdk.Operation.changeTrust(operationOpts))
-      // DONT call .build()
+    return new IONSdk.TransactionBuilder(spoonAccount)
+      .addOperation(IONSdk.Operation.changeTrust(operationOpts))
+    // DONT call .build()
   },
   buildTxRemoveOffer(Server, spoonAccount, offerId) {
-    return new StellarSdk.TransactionBuilder(spoonAccount)
-      .addOperation(StellarSdk.Operation.manageOffer({
-        buying: StellarSdk.Asset.native(),
-        selling: new StellarSdk.Asset('REMOVE', spoonAccount.accountId()),
+    return new IONSdk.TransactionBuilder(spoonAccount)
+      .addOperation(IONSdk.Operation.manageOffer({
+        buying: IONSdk.Asset.native(),
+        selling: new IONSdk.Asset('REMOVE', spoonAccount.accountId()),
         amount: '0',
         price: '1',
         offerId,
       }))
-      // DONT call .build()
+    // DONT call .build()
   },
   async History(Server, publicKey, onUpdate) {
     let history = {
@@ -541,7 +554,7 @@ const MagicSpoon = {
     // This probably doesn't do anything that helpful
     for (let iteration = 0; iteration < 10; iteration++) {
       for (let i = 0; i < buffer.length; i++) {
-        buffer[i] = Math.round(Math.random()*255);
+        buffer[i] = Math.round(Math.random() * 255);
       }
     }
   },

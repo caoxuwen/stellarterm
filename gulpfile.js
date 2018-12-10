@@ -85,6 +85,14 @@ gulp.task('customConfig', (cb) => {
     configObj.networkPassphrase = process.env.STELLARTERM_CUSTOM_NETWORK_PASSPHRASE;
   }
 
+  if (process.env.ASSET_ISSUER_PUBKEY) {
+    if (!configObj.horizonUrl) {
+      throw new Error('To use ASSET_ISSUER, the environment variable STELLARTERM_CUSTOM_HORIZON_URL must also be set');
+    }
+
+    configObj.assetIssuer = process.env.ASSET_ISSUER_PUBKEY;
+  }
+
   configFile += JSON.stringify(configObj, null, 2);
 
   configFile += ';\n';
@@ -157,7 +165,7 @@ gulp.task('watch', baseTasks, () => {
     notify: false,
     logPrefix: 'BS',
     server: ['dist'],
-    https: true
+    https: false
   });
   gulp.watch('./src/index.html', ['html-reload']);
   gulp.watch(['src/**/*.scss'], ['css-reload']);

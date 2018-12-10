@@ -10,11 +10,11 @@ import TermsOfUse from './TermsOfUse.jsx';
 import Ellipsis from './Ellipsis.jsx';
 import directory from '../../directory';
 
-export default class Exchange extends React.Component {
+export default class Margin extends React.Component {
   constructor(props) {
     super(props);
-    this.unsub = this.props.d.orderbook.event.sub(() => { this.forceUpdate() });
-    this.unsubSession = this.props.d.session.event.sub(() => { this.forceUpdate() });
+    this.unsub = this.props.d.orderbook.event.sub(() => {this.forceUpdate()});
+    this.unsubSession = this.props.d.session.event.sub(() => {this.forceUpdate()});
   }
   componentWillUnmount() {
     this.unsub();
@@ -78,7 +78,7 @@ export default class Exchange extends React.Component {
         Offer making has been disabled for this pair. You may still cancel your existing offers below.
       </div>
     } else {
-      offermakers = <OfferMakers d={this.props.d} margin={false}></OfferMakers>
+      offermakers = <OfferMakers d={this.props.d} margin={true}></OfferMakers>
     }
 
     return <div>

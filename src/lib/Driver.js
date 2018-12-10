@@ -12,7 +12,8 @@ import Modal from './driver/Modal';
 BigNumber.config({ EXPONENTIAL_AT: 100 });
 
 function Driver(driverOpts) {
-  this.Server = new StellarSdk.Server(driverOpts.network.horizonUrl);
+  this.Server = new IONSdk.Server(driverOpts.network.horizonUrl, {allowHttp:true});
+  //this.Server = new IONSdk.Server(driverOpts.network.horizonUrl);
   this.Server.serverUrl = driverOpts.network.horizonUrl;
 
   this.session = new Session(this);

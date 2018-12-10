@@ -22,7 +22,7 @@ export default class AddTrustFromFederation extends React.Component {
         currencies: [],
       });
 
-      StellarSdk.StellarTomlResolver.resolve(fedValue)
+      IONSdk.StellarTomlResolver.resolve(fedValue)
       .then(res => {
         if (fedValue !== this.state.federation) {
           return;

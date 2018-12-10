@@ -223,7 +223,7 @@ export default class Send extends React.Component {
         if (amountValid === false) {
           amountValidationMessage = <p>Amount is invalid</p>
         } else if (d.send.step2.availability.asset !== null) {
-          let targetBalance = d.session.account.getBalance(new StellarSdk.Asset(d.send.step2.availability.asset.code, d.send.step2.availability.asset.issuer));
+          let targetBalance = d.session.account.getBalance(new IONSdk.Asset(d.send.step2.availability.asset.code, d.send.step2.availability.asset.issuer));
           if (targetBalance !== null) {
             yourBalance = <p>You have {targetBalance} {d.send.step2.availability.asset.code}.</p>
           }

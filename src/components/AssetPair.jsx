@@ -29,7 +29,7 @@ export default class AssetPair extends React.Component {
 
     if (this.props.row) {
       if (this.props.baseBuying && this.props.counterSelling) {
-        let url = '#' + Stellarify.pairToExchangeUrl(this.props.baseBuying, this.props.counterSelling);
+        let url = '#exchange' + Stellarify.pairToExchangeUrl(this.props.baseBuying, this.props.counterSelling);
         // In the future, this can be split into AssetPairRow and AssetPair if the row is not needed
         return <a href={url} key={url} className="AssetPairRow">
           {content}

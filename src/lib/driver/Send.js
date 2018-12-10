@@ -35,8 +35,8 @@ export default function Send(driver) {
 
   const resetStep2 = () => {
     this.availableAssets = {};
-    this.availableAssets[Stellarify.assetToSlug(new StellarSdk.Asset.native())] = {
-      asset: new StellarSdk.Asset.native(),
+    this.availableAssets[Stellarify.assetToSlug(new IONSdk.Asset.native())] = {
+      asset: new IONSdk.Asset.native(),
       sendable: true,
     };
     this.step2 = {
@@ -77,8 +77,8 @@ export default function Send(driver) {
   const calculateAvailableAssets = () => {
     // Calculate the assets that you can send to the destination
     this.availableAssets = {};
-    this.availableAssets[Stellarify.assetToSlug(new StellarSdk.Asset.native())] = {
-      asset: new StellarSdk.Asset.native(),
+    this.availableAssets[Stellarify.assetToSlug(new IONSdk.Asset.native())] = {
+      asset: new IONSdk.Asset.native(),
       sendable: true,
     };
     const senderTrusts = {};
@@ -202,7 +202,7 @@ export default function Send(driver) {
         // Prevent race race conditions
         const destInput = this.step1.destInput;
 
-        StellarSdk.FederationServer.resolve(this.step1.destInput)
+        IONSdk.FederationServer.resolve(this.step1.destInput)
         .then((federationRecord) => {
           if (destInput !== this.step1.destInput) {
             return;

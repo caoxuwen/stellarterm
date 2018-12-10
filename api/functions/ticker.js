@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const rp = require('request-promise');
-const StellarSdk = require('stellar-sdk');
+const IONSdk = require('ion-sdk');
 const niceRound = require('./utils/niceRound');
 const tradeWalker = require('./utils/tradeWalker');
 
@@ -11,8 +11,8 @@ const run = queue.add;
 
 const directory = require('../directory.json');
 
-Server = new StellarSdk.Server('https://horizon.stellar.org');
-StellarSdk.Network.usePublicNetwork();
+Server = new IONSdk.Server('https://horizon.stellar.org');
+IONSdk.Network.usePublicNetwork();
 
 function medianOf3(a,b,c) {
   return [a,b,c].sort()[1];
@@ -117,8 +117,8 @@ function phase3(ticker) {
   let lumenVolumeUSD = 0;
 
   return Promise.all(_.map(ticker.pairs, (pair, pairSlug) => {
-    let baseBuying     = new StellarSdk.Asset(pair.baseBuying.code, pair.baseBuying.issuer);
-    let counterSelling = new StellarSdk.Asset(pair.counterSelling.code, pair.counterSelling.issuer);
+    let baseBuying     = new IONSdk.Asset(pair.baseBuying.code, pair.baseBuying.issuer);
+    let counterSelling = new IONSdk.Asset(pair.counterSelling.code, pair.counterSelling.issuer);
 
     let asset;
     if (baseBuying.isNative()) {

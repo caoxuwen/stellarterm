@@ -18,7 +18,7 @@ export default class DepositAnchors extends React.Component {
         if (assetCode === this.props.selectedAssetCode) {
           const assetIssuer = assetParts[1];
           const name = anchor.name;
-          const asset = new StellarSdk.Asset(assetCode, assetIssuer);
+          const asset = new IONSdk.Asset(assetCode, assetIssuer);
           const instructions = directory.assets[assetId].instructions || '';
           const row = (<tr className="row" key={name + '_' + assetCode + '_' + assetIssuer}>
               <td className="row__item--assetCard">

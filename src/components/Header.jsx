@@ -25,6 +25,7 @@ export default class Header extends React.Component {
           <nav className="Header__nav">
             <a className="Header__nav__item Header__nav__item--logo" href="#">ION</a>
             <a className={'Header__nav__item Header__nav__item--link' + (this.props.urlParts[0] === 'exchange' ? ' is-current' : '')} href="#exchange">Exchange</a>
+            <a className={'Header__nav__item Header__nav__item--link' + (this.props.urlParts[0] === 'margin' ? ' is-current' : '')} href="#margin">Margin</a>
             <a className={'Header__nav__item Header__nav__item--link' + (this.props.urlParts[0] === 'markets' ? ' is-current' : '')} href="#markets">Markets</a>
             <a className={'Header__nav__item Header__nav__item--link' + (this.props.urlParts[0] === 'account' ? ' is-current' : '')} href="#account">Account</a>
           </nav>

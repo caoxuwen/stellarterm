@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const StellarSdk = require('stellar-sdk');
+const IONSdk = require('ion-sdk');
 
 let tradeWalker = {};
 
@@ -29,8 +29,8 @@ tradeWalker.walkUntil = function walkUntil(Server, baseBuying, counterSelling, p
   const MAX_DEPTH = 5;
   let prevCall;
 
-  let baseBuyingSdk = new StellarSdk.Asset(baseBuying.code, baseBuying.issuer);
-  let counterSellingSdk = new StellarSdk.Asset(counterSelling.code, counterSelling.issuer);
+  let baseBuyingSdk = new IONSdk.Asset(baseBuying.code, baseBuying.issuer);
+  let counterSellingSdk = new IONSdk.Asset(counterSelling.code, counterSelling.issuer);
 
   let tradeCalls = Server.trades().forAssetPair(baseBuyingSdk, counterSellingSdk).limit(200).order('desc').call()
   let processResults = tradeResults => {

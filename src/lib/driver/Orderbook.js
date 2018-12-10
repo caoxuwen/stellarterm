@@ -24,7 +24,7 @@ export default function Orderbook(driver) {
     },
     setOrderbook: (baseBuying, counterSelling) => {
       // If orderbook is already set, then this is a no-op
-      // Expects baseBuying and counterSelling to StellarSdk.Asset objects
+      // Expects baseBuying and counterSelling to IONSdk.Asset objects
       if (this.data.ready && this.data.baseBuying.equals(baseBuying) && this.data.counterSelling.equals(counterSelling)) {
         return;
       }

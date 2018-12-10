@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const rp = require('request-promise');
-const StellarSdk = require('stellar-sdk');
+const IONSdk = require('ion-sdk');
 
 const PQueue = require('p-queue');
 const queue = new PQueue({concurrency: 20});
@@ -9,10 +9,10 @@ const run = queue.add;
 
 const directory = require('../directory.json');
 
-StellarSdk.Network.usePublicNetwork();
+IONSdk.Network.usePublicNetwork();
 
-S = new StellarSdk.Server('https://horizon.stellar.org');
-StellarSdk.Network.usePublicNetwork();
+S = new IONSdk.Server('https://horizon.stellar.org');
+IONSdk.Network.usePublicNetwork();
 
 function historyGenerator() {
   let finish;

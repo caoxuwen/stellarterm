@@ -27,21 +27,21 @@ export default class AssetPickerNarrow extends React.Component {
   }
   checkInputs(newState) {
     if (newState.code === 'IONX' && newState.issuer === '') {
-      return StellarSdk.Asset.native();
+      return IONSdk.Asset.native();
     }
 
     let assetByAccountId = directory.getAssetByAccountId(newState.code, newState.issuer);
     if (assetByAccountId !== null) {
-      return new StellarSdk.Asset(assetByAccountId.code, assetByAccountId.issuer);
+      return new IONSdk.Asset(assetByAccountId.code, assetByAccountId.issuer);
     }
 
     let assetByDomain = directory.getAssetByDomain(newState.code, newState.issuer);
     if (assetByDomain !== null) {
-      return new StellarSdk.Asset(assetByDomain.code, assetByDomain.issuer);
+      return new IONSdk.Asset(assetByDomain.code, assetByDomain.issuer);
     }
 
     if (Validate.publicKey(newState.issuer).ready && Validate.assetCode(newState.code)) {
-      return new StellarSdk.Asset(newState.code, newState.issuer);
+      return new IONSdk.Asset(newState.code, newState.issuer);
     }
 
     return null;
