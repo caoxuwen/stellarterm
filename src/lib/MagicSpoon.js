@@ -413,7 +413,7 @@ const MagicSpoon = {
       };
 
       transaction.addOperation(IONSdk.Operation.createMarginOffer(operationOpts))
-    } {
+    } else {
       const operationOpts = {
         buying: sdkBuying,
         selling: sdkSelling,
