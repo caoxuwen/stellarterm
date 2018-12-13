@@ -85,12 +85,12 @@ gulp.task('customConfig', (cb) => {
     configObj.networkPassphrase = process.env.STELLARTERM_CUSTOM_NETWORK_PASSPHRASE;
   }
 
-  if (process.env.ASSET_ISSUER_PUBKEY) {
-    if (!configObj.horizonUrl) {
-      throw new Error('To use ASSET_ISSUER, the environment variable STELLARTERM_CUSTOM_HORIZON_URL must also be set');
-    }
+  if (process.env.ASSET_ISSUER_PUBKEY_ETHI) {
+    configObj.assetIssuer_ethi = process.env.ASSET_ISSUER_PUBKEY_ETHI;
+  }
 
-    configObj.assetIssuer = process.env.ASSET_ISSUER_PUBKEY;
+  if (process.env.ASSET_ISSUER_PUBKEY_USDI) {
+    configObj.assetIssuer_usdi = process.env.ASSET_ISSUER_PUBKEY_USDI;
   }
 
   configFile += JSON.stringify(configObj, null, 2);

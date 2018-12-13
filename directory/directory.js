@@ -30,7 +30,7 @@ directory.addAnchor({
 
 directory.addAsset('ion.one', {
   code: 'ETHI',
-  issuer: window.stCustomConfig.assetIssuer,
+  issuer: window.stCustomConfig.assetIssuer_ethi,
   instructions: 'https://ion.one',
     type: 'token',
     summary: 'ETH ionized',
@@ -40,22 +40,12 @@ directory.addAsset('ion.one', {
 
 directory.addAsset('ion.one', {
   code: 'USDI',
-  issuer: window.stCustomConfig.assetIssuer,
+  issuer: window.stCustomConfig.assetIssuer_usdi,
   instructions: 'https://ion.one',
     type: 'token',
     summary: 'USD ionized',
     detail: 'pegs to USD price through funding between longs and shorts',
     topTradePairSlug: 'USDI-ion.one/ETHI-ion.one'
-});
-
-directory.addAsset('ion.one', {
-  code: 'ION1',
-  issuer: window.stCustomConfig.assetIssuer,
-  instructions: 'https://ion.one',
-    type: 'token',
-    summary: 'stablecoin',
-    detail: 'withdraw to use as ERC20 token',
-    topTradePairSlug: 'ION1-ion.one/USDI-ion.one'
 });
 
 directory.addPair({
@@ -69,17 +59,7 @@ directory.addPair({
 });
 
 directory.addPair({
-  baseBuying: ['USDI', 'ion.one'],
-  counterSelling: ['ION1', 'ion.one'],
-});
-
-directory.addPair({
   baseBuying: ['ETHI', 'ion.one'],
-  counterSelling: ['IONX', 'native'],
-});
-
-directory.addPair({
-  baseBuying: ['ION1', 'ion.one'],
   counterSelling: ['IONX', 'native'],
 });
 

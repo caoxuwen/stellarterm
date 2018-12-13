@@ -178,8 +178,8 @@ class TermApp extends React.Component {
           body = <Generic title="Loading orderbook">Loading</Generic>
         } else {
           // Default to a market with good activity
-          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer);
-          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer);
+          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer_ethi);
+          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer_usdi);
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {
@@ -215,8 +215,8 @@ class TermApp extends React.Component {
           body = <Generic title="Loading orderbook">Loading</Generic>
         } else {
           // Default to a market with good activity
-          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer);
-          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer);
+          let baseBuying = new IONSdk.Asset('ETHI', window.stCustomConfig.assetIssuer_ethi);
+          let counterSelling = new IONSdk.Asset('USDI', window.stCustomConfig.assetIssuer_usdi);
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {

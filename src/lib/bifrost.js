@@ -94,7 +94,7 @@ export default class BridgeSession {
 
         var assetTrusted = false;
         sourceAccount.balances.forEach(balance => {
-          if (balance.asset_code == "ETHI" && balance.asset_issuer == window.stCustomConfig.assetIssuer) {
+          if (balance.asset_code == "ETHI" && balance.asset_issuer == window.stCustomConfig.assetIssuer_ethi) {
             assetTrusted = true;
           }
         })
