@@ -58,6 +58,20 @@ const MagicSpoon = {
       return targetBalance;
     };
 
+    sdkAccount.getTrustlineDetails = (targetAsset) => {
+      let targetDetail = null;
+      if (targetAsset.isNative())
+        return targetDetail;
+
+      _.each(sdkAccount.balances, balance => {
+        if (balance.asset_code === targetAsset.getCode() && balance.asset_issuer === targetAsset.getIssuer()) {
+          targetDetail = balance;
+        }
+      });
+
+      return targetDetail;
+    };
+
     // Should always return at least one item (which is lumens)
     sdkAccount.getSortedBalances = (opts) => {
       if (!opts) {

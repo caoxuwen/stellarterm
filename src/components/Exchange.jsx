@@ -26,7 +26,7 @@ export default class Exchange extends React.Component {
       return <Generic title="Loading orderbook">Loading orderbook data from Horizon<Ellipsis /></Generic>
     }
 
-    let thinOrderbookWarning;
+    //let thinOrderbookWarning;
     let data = this.props.d.orderbook.data;
     let ticker = this.props.d.ticker;
     let warningWarning;
@@ -51,14 +51,14 @@ export default class Exchange extends React.Component {
           }
         }
       }
-
+/*
       if (aggregateDepth < 100) {
         thinOrderbookWarning = <div className="Exchange__warning">
           <div className="s-alert s-alert--warning">
             The orderbook for this pair is thin. To get a better price, create an offer without taking an existing one.
           </div>
         </div>
-      }
+      }*/
 
 
     }
@@ -91,7 +91,7 @@ export default class Exchange extends React.Component {
           <div className="island__header">
             Orderbook
           </div>
-          {thinOrderbookWarning}
+          {/*thinOrderbookWarning*/}
           {warningWarning}
           <div>
             {offermakers}

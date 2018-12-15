@@ -114,7 +114,8 @@ DirectoryBuilder.prototype.addAsset = function(anchorDomain, details) {
       domain: anchorDomain,
       summary: details.summary,
       detail: details.detail,
-      topTradePairSlug: details.topTradePairSlug
+      topTradePairSlug: details.topTradePairSlug,
+      isBaseAsset: details.isBaseAsset ? true : false
   };
   if (details.instructions) {
     this.assets[slug]['instructions'] = details.instructions;

@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import TrustButton from './Session/TrustButton.jsx';
+import directory from '../../directory';
 
 // OfferMaker is an uncontrolled element (from the perspective of its users)
 export default class OfferMaker extends React.Component {
@@ -182,12 +183,13 @@ export default class OfferMaker extends React.Component {
 
     let title;
     if (this.props.side === 'buy') {
-      title = `Buy ${baseAssetName} using ${counterAssetName}`;
+      title = `Buy ${baseAssetName} using ${counterAssetName} [Long]`;
     } else {
-      title = `Sell ${baseAssetName} for ${counterAssetName}`;
+      title = `Sell ${baseAssetName} for ${counterAssetName} [Short]`;
     }
 
     let youHave;
+    let youBorrow;
     let hasAllTrust = false;
     let insufficientBalanceMessage;
     let trustNeededAssets = [];
@@ -210,25 +212,91 @@ export default class OfferMaker extends React.Component {
       let targetAsset = this.props.side === 'buy' ? this.props.d.orderbook.data.counterSelling : this.props.d.orderbook.data.baseBuying;
 
       if (targetBalance) {
-        let inputSpendAmount = this.props.side === 'buy' ? this.state.total : this.state.amount;
-        let maxOffer = targetBalance;
-        if (targetAsset.isNative()) {
-          maxOffer = this.props.d.session.account.maxLumenSpend();
-          youHave = <div className="OfferMaker__youHave">You may trade up to {maxOffer} IONX (due to <a href="#account">minimum balance requirements</a>).</div>;
-        } else {
-          youHave = <div className="OfferMaker__youHave">You have {targetBalance} {targetAsset.getCode()}</div>;
-        }
-        if (this.isMarginTrade) { 
-          //TODO: calculate the limit
-        }
-        else if (Number(inputSpendAmount) > Number(maxOffer)) {
-          insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough {targetAsset.getCode()} to create this offer.</p>;
-        }
-      } else {
-        youHave = <div>
-          <p className="OfferMaker__youHave">Must <a href="#account/addTrust">accept the asset {targetAsset.getCode()}</a> to trade</p>
 
-        </div>
+        if (this.isMarginTrade) {
+          if (this.isMarginTrade) {
+
+            let orderbook = this.props.d.orderbook.data;
+
+            let account = this.props.d.session.account;
+
+            let buyingTrustline = account.getTrustlineDetails(orderbook.baseBuying);
+            let sellingTrustline = account.getTrustlineDetails(orderbook.counterSelling);
+
+            let buyingAsset = directory.getAssetByAccountId(buyingTrustline.asset_code, buyingTrustline.asset_issuer);
+            let sellingAsset = directory.getAssetByAccountId(sellingTrustline.asset_code, sellingTrustline.asset_issuer);
+
+            let baseTrustline = buyingAsset.isBaseAsset ? buyingTrustline : sellingTrustline;
+
+            let baseTrustBalance = parseFloat(baseTrustline.balance);
+            let buyingTrustDebt = parseFloat(buyingTrustline.debt);
+            let sellingTrustDebt = parseFloat(sellingTrustline.debt);
+
+            let inputSpendAmount = this.props.side === 'buy' ? this.state.total : this.state.amount;
+            let maxLeverage = 10;
+
+            let last_price_defined = orderbook.trades && (orderbook.trades.length > 0) ? true : false;
+            let last_price = last_price_defined ? orderbook.trades[orderbook.trades.length - 1][1] : 0;
+            let profitloss = 0;
+            if (last_price_defined) {
+              profitloss = (buyingTrustDebt + sellingTrustDebt / last_price);
+            }
+
+            let maxOffer = (baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)) * maxLeverage;
+
+
+            if (this.props.side === 'buy') {
+              let price = parseFloat(this.state.price);
+              if (!isNaN(price) && price > 0) {
+                if (sellingTrustDebt <= 0) {
+                  youBorrow = <span>You can borrow {((maxOffer - profitloss) * price).toFixed(5)} {sellingTrustline.asset_code}.</span>;
+                } else {
+                  youBorrow = <span>You can borrow {((maxOffer - profitloss) * price).toFixed(5)} more {sellingTrustline.asset_code}.</span>;
+                }
+              }
+
+              if (sellingTrustDebt < 0) {
+                youHave = <div className="OfferMaker__youHave">You have {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code} in asset. {youBorrow}</div>;
+              } else {
+                youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}. {youBorrow}</div>;
+              }
+
+            } else {
+              if (buyingTrustDebt <= 0) {
+                youBorrow = <span>You can borrow {(maxOffer - profitloss).toFixed(5)} {buyingTrustline.asset_code}.</span>;
+              } else {
+                youBorrow = <span>You can borrow {(maxOffer - profitloss).toFixed(5)} more {buyingTrustline.asset_code}.</span>;
+              }
+
+              if (buyingTrustDebt < 0) {
+                youHave = <div className="OfferMaker__youHave">You have {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code} in asset. {youBorrow}</div>;
+              } else {
+                youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}. {youBorrow}</div>;
+              }
+            }
+
+            if (parseFloat(inputSpendAmount) > parseFloat(maxOffer)) {
+              insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
+            }
+          } else {
+            let inputSpendAmount = this.props.side === 'buy' ? this.state.total : this.state.amount;
+            let maxOffer = targetBalance;
+            if (targetAsset.isNative()) {
+              maxOffer = this.props.d.session.account.maxLumenSpend();
+              youHave = <div className="OfferMaker__youHave">You may trade up to {maxOffer} IONX (due to <a href="#account">minimum balance requirements</a>).</div>;
+            } else {
+              youHave = <div className="OfferMaker__youHave">You have {targetBalance} {targetAsset.getCode()}</div>;
+            }
+            if (Number(inputSpendAmount) > Number(maxOffer)) {
+              insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough {targetAsset.getCode()} to create this offer.</p>;
+            }
+          }
+        } else {
+          youHave = <div>
+            <p className="OfferMaker__youHave">Must <a href="#account/addTrust">accept the asset {targetAsset.getCode()}</a> to trade</p>
+
+          </div>
+        }
       }
     }
 
@@ -252,9 +320,9 @@ export default class OfferMaker extends React.Component {
     let summary;
     if (this.state.valid) {
       if (this.props.side === 'buy') {
-        summary = <div className="s-alert s-alert--info">Buy {this.state.amount} {this.capDigits(baseAssetName)} for {this.capDigits(this.state.total)} {counterAssetName}</div>;
+        summary = <div className="s-alert s-alert--info">Buy {this.state.amount} {this.capDigits(baseAssetName)} for {this.capDigits(this.state.total)} {counterAssetName} [Long]</div>;
       } else {
-        summary = <div className="s-alert s-alert--info">Sell {this.state.amount} {this.capDigits(baseAssetName)} for {this.capDigits(this.state.total)} {counterAssetName}</div>;
+        summary = <div className="s-alert s-alert--info">Sell {this.state.amount} {this.capDigits(baseAssetName)} for {this.capDigits(this.state.total)} {counterAssetName} [Short]</div>;
       }
     }
 

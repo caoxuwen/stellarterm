@@ -32,20 +32,22 @@ directory.addAsset('ion.one', {
   code: 'ETHI',
   issuer: window.stCustomConfig.assetIssuer_ethi,
   instructions: 'https://ion.one',
-    type: 'token',
-    summary: 'ETH ionized',
-    detail: 'corresponds 1:1 to Ethereum, deposit through atomic swap',
-    topTradePairSlug: 'ETHI-ion.one/USDI-ion.one'
+  type: 'token',
+  summary: 'ETH ionized',
+  detail: 'corresponds 1:1 to Ethereum, deposit through atomic swap',
+  topTradePairSlug: 'ETHI-ion.one/USDI-ion.one',
+  isBaseAsset: true
 });
 
 directory.addAsset('ion.one', {
   code: 'USDI',
   issuer: window.stCustomConfig.assetIssuer_usdi,
   instructions: 'https://ion.one',
-    type: 'token',
-    summary: 'USD ionized',
-    detail: 'pegs to USD price through funding between longs and shorts',
-    topTradePairSlug: 'USDI-ion.one/ETHI-ion.one'
+  type: 'token',
+  summary: 'USD ionized',
+  detail: 'pegs to USD price through funding between longs and shorts',
+  topTradePairSlug: 'USDI-ion.one/ETHI-ion.one',
+  isBaseAsset: false
 });
 
 directory.addPair({

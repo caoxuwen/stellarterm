@@ -3,6 +3,7 @@ import OfferTables from './OfferTables.jsx';
 import PairPicker from './PairPicker.jsx';
 import OfferMakers from './OfferMakers.jsx';
 import ManageOffers from './ManageOffers.jsx';
+import MarginInfo from './MarginInfo.jsx';
 import PriceChart from './PriceChart.jsx';
 import Generic from './Generic.jsx';
 import Stellarify from '../lib/Stellarify';
@@ -13,8 +14,8 @@ import directory from '../../directory';
 export default class Margin extends React.Component {
   constructor(props) {
     super(props);
-    this.unsub = this.props.d.orderbook.event.sub(() => {this.forceUpdate()});
-    this.unsubSession = this.props.d.session.event.sub(() => {this.forceUpdate()});
+    this.unsub = this.props.d.orderbook.event.sub(() => { this.forceUpdate() });
+    this.unsubSession = this.props.d.session.event.sub(() => { this.forceUpdate() });
   }
   componentWillUnmount() {
     this.unsub();
@@ -37,14 +38,14 @@ export default class Margin extends React.Component {
 
       let aggregateDepth = 0;
 
-      if (baseSlug !== 'XLM-native') {
+      if (baseSlug !== 'IONX') {
         for (let i in ticker.data.assets) {
           if (ticker.data.assets[i].slug === baseSlug) {
             aggregateDepth += ticker.data.assets[i].depth10_USD;
           }
         }
       }
-      if (counterSlug !== 'XLM-native') {
+      if (counterSlug !== 'IONX') {
         for (let i in ticker.data.assets) {
           if (ticker.data.assets[i].slug === counterSlug) {
             aggregateDepth += ticker.data.assets[i].depth10_USD;
@@ -59,8 +60,6 @@ export default class Margin extends React.Component {
           </div>
         </div>
       }
-
-
     }
 
     let directoryAsset = directory.getAssetByAccountId(data.baseBuying.code, data.baseBuying.issuer);
@@ -91,13 +90,21 @@ export default class Margin extends React.Component {
           <div className="island__header">
             Orderbook
           </div>
-          {thinOrderbookWarning}
+          {/*thinOrderbookWarning*/}
           {warningWarning}
           <div>
             {offermakers}
             <div className="island__separator"></div>
             <OfferTables d={this.props.d}></OfferTables>
           </div>
+        </div>
+      </div>
+      <div className="so-back islandBack">
+        <div className="island">
+          <div className="island__header">
+            Margin Info
+          </div>
+          <MarginInfo d={this.props.d}></MarginInfo>
         </div>
       </div>
       <div className="so-back islandBack">
