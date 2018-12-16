@@ -81,33 +81,39 @@ export default class Margin extends React.Component {
     }
 
     return <div>
-      <div className="so-back islandBack islandBack--t">
+      <div className="islandBack islandBack--t">
         <PairPicker d={this.props.d}></PairPicker>
       </div>
       <PriceChart d={this.props.d}></PriceChart>
-      <div className="so-back islandBack">
+      <div className="islandBack">
         <div className="island Exchange__orderbook">
           <div className="island__header">
             Orderbook
           </div>
-          {/*thinOrderbookWarning*/}
-          {warningWarning}
-          <div>
-            {offermakers}
-            <div className="island__separator"></div>
-            <OfferTables d={this.props.d}></OfferTables>
+          <OfferTables d={this.props.d}></OfferTables>
+        </div>
+      </div>
+      <div className="islandBack" id="multiContainer">
+        <div className="panelContainer">
+          <div className="island" id="leftPanel">
+            <div className="island__header">
+              Margin Info
+          </div>
+            <MarginInfo d={this.props.d}></MarginInfo>
+          </div>
+          <div className="island" id="rightPanel">
+            <div className="island__header">
+              Orderbook
+          </div>
+            {/*thinOrderbookWarning*/}
+            {warningWarning}
+            <div>
+              {offermakers}
+            </div>
           </div>
         </div>
       </div>
-      <div className="so-back islandBack">
-        <div className="island">
-          <div className="island__header">
-            Margin Info
-          </div>
-          <MarginInfo d={this.props.d}></MarginInfo>
-        </div>
-      </div>
-      <div className="so-back islandBack">
+      <div className="islandBack">
         <div className="island">
           <div className="island__header">
             Manage offers

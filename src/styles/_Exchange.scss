@@ -10,3 +10,24 @@
   text-align: center;
   margin-bottom: $s-scale-2;
 }
+
+#leftPanel {
+  width: 230px;
+  vertical-align: top;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+#rightPanel {
+  width: 740px;
+  display: inline-block;
+}
+
+.panelContainer {
+  display: inline-flex;
+}
+
+#multiContainer {
+  width: 980px;
+  margin: 0 auto;
+}

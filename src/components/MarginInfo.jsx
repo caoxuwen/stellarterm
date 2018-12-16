@@ -34,16 +34,16 @@ export default class MarginInfo extends React.Component {
 
     let buyingTrustName;
     if (buyingTrustDebt > 0) {
-      buyingTrustName = <td className="ManageOffers__table__header__item">{buyingTrustline.asset_code} Debt</td>
+      buyingTrustName = <td className="MarginInfo__table__header__item">{buyingTrustline.asset_code} Debt</td>
     } else {
-      buyingTrustName = <td className="ManageOffers__table__header__item">{buyingTrustline.asset_code} Asset</td>
+      buyingTrustName = <td className="MarginInfo__table__header__item">{buyingTrustline.asset_code} Asset</td>
     }
 
     let sellingTrustName;
     if (sellingTrustDebt > 0) {
-      sellingTrustName = <td className="ManageOffers__table__header__item">{sellingTrustline.asset_code} Debt</td>
+      sellingTrustName = <td className="MarginInfo__table__header__item">{sellingTrustline.asset_code} Debt</td>
     } else {
-      sellingTrustName = <td className="ManageOffers__table__header__item">{sellingTrustline.asset_code} Asset</td>
+      sellingTrustName = <td className="MarginInfo__table__header__item">{sellingTrustline.asset_code} Asset</td>
     }
 
     let last_price_defined = orderbook.trades && (orderbook.trades.length > 0) ? true : false;
@@ -55,46 +55,48 @@ export default class MarginInfo extends React.Component {
       let profitloss = - (buyingTrustDebt + sellingTrustDebt / last_price);
       let lever = profitloss / baseTrustBalance;
       if (lever < 0) {
-        leverageInfoRow = <tr className="ManageOffers__table__row">
-          <td className="ManageOffers__table__header__item">Leverage</td>
-          <td className="ManageOffers__table__row__item">{-lever.toFixed(5)}X</td>
+        leverageInfoRow = <tr className="MarginInfo__table__row">
+          <td className="MarginInfo__table__header__item">Leverage</td>
+          <td className="MarginInfo__table__row__item">{-lever.toFixed(5)}X</td>
         </tr>;
       }
-      profitlossRow = <tr className="ManageOffers__table__row">
-        <td className="ManageOffers__table__header__item">P/L in {baseTrustline.asset_code}</td>
-        <td className="ManageOffers__table__row__item">{profitloss.toFixed(3)} ({(lever * 100).toFixed(3)}%)</td>
+      profitlossRow = <tr className="MarginInfo__table__row">
+        <td className="MarginInfo__table__header__item">P/L in {baseTrustline.asset_code}</td>
+        <td className="MarginInfo__table__row__item">{profitloss.toFixed(3)} ({(lever * 100).toFixed(3)}%)</td>
       </tr>;
     }
 
     return <div className="island--pb">
-      <div className="ManageOffers">
-        <div className=" island__sub">
+      <div className="MarginInfo">
+        <div className="island__sub">
           <div className=" island__sub__division">
             <h3 className="island__sub__division__title"></h3>
-            <table className="ManageOffers__table">
+            <table className="MarginInfo__table">
               <tbody>
-                <tr className="ManageOffers__table__row">
-                  <td className="ManageOffers__table__header__item">Collateral</td>
-                  <td className="ManageOffers__table__row__item">{baseTrustBalance.toFixed(5)}</td>
+                <tr className="MarginInfo__table__row">
+                  <td className="MarginInfo__table__header__item">Collateral</td>
+                  <td className="MarginInfo__table__row__item">{baseTrustBalance.toFixed(5)}</td>
                 </tr>
-                <tr className="ManageOffers__table__row">
-                  <td className="ManageOffers__table__header__item">Avaialble margin</td>
-                  <td className="ManageOffers__table__row__item">{(baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)).toFixed(5)}</td>
+                <tr className="MarginInfo__table__row">
+                  <td className="MarginInfo__table__header__item">Avaialble</td>
+                  <td className="MarginInfo__table__row__item">{(baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)).toFixed(5)}</td>
                 </tr>
-                <tr className="ManageOffers__table__row">
+                <tr className="MarginInfo__table__row">
                   {buyingTrustName}
-                  <td className="ManageOffers__table__row__item">{Math.abs(buyingTrustDebt.toFixed(5))}</td>
+                  <td className="MarginInfo__table__row__item">{Math.abs(buyingTrustDebt.toFixed(5))}</td>
                 </tr>
-                <tr className="ManageOffers__table__row">
+                <tr className="MarginInfo__table__row">
                   {sellingTrustName}
-                  <td className="ManageOffers__table__row__item">{Math.abs(sellingTrustDebt.toFixed(5))}</td>
+                  <td className="MarginInfo__table__row__item">{Math.abs(sellingTrustDebt.toFixed(5))}</td>
                 </tr>
                 {profitlossRow}
                 {leverageInfoRow}
+                <tr className="MarginInfo__table__row">
+                  <td className="MarginInfo__table__header__item">Max Leverage</td>
+                  <td className="MarginInfo__table__row__item">10x</td>
+                </tr>
               </tbody>
             </table>
-          </div>
-          <div className="island__sub__division">
           </div>
         </div>
       </div>
