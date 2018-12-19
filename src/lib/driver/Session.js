@@ -54,7 +54,7 @@ export default function Send(driver) {
         this.ledgerConnected = false;
         this.event.trigger();
       }
-      setTimeout(() => {this.pingLedger(true)}, 1000);
+      setTimeout(() => { this.pingLedger(true) }, 1000);
     })
   }
   this.pingLedger(true);
@@ -85,12 +85,12 @@ export default function Send(driver) {
         this.setupLedgerError = error.message;
         if (error && error.errorCode) {
           let u2fErrorCodes = {
-              0: 'OK',
-              1: 'OTHER_ERROR',
-              2: 'BAD_REQUEST',
-              3: 'CONFIGURATION_UNSUPPORTED',
-              4: 'DEVICE_INELIGIBLE',
-              5: 'TIMEOUT (unable to communicate with device)',
+            0: 'OK',
+            1: 'OTHER_ERROR',
+            2: 'BAD_REQUEST',
+            3: 'CONFIGURATION_UNSUPPORTED',
+            4: 'DEVICE_INELIGIBLE',
+            5: 'TIMEOUT (unable to communicate with device)',
           };
           this.setupLedgerError = u2fErrorCodes[error.errorCode];
         }
@@ -98,63 +98,63 @@ export default function Send(driver) {
       }
     },
     logIn: async (keypair, opts) => {
-	this.setupError = false;
-	if (this.state !== 'unfunded') {
-            this.state = 'loading';
-            this.event.trigger();
-	}
-	
-	try {
-            this.account = await MagicSpoon.Account(driver.Server, keypair, opts, () => {
-		this.event.trigger();
+      this.setupError = false;
+      if (this.state !== 'unfunded') {
+        this.state = 'loading';
+        this.event.trigger();
+      }
+
+      try {
+        this.account = await MagicSpoon.Account(driver.Server, keypair, opts, () => {
+          this.event.trigger();
+        });
+        this.state = 'in';
+        this.authType = opts.authType;
+
+        //this.props.d.session.account.accountId();
+        const params = {
+          network: 'Test ION Network ; Nov 2018',
+          horizonURL: 'https://api.ion.one',
+          bifrostURL: 'https://bridge.ion.one'
+        };
+        this.bridgesession = new BridgeSession(params);
+        this.onEvent = function (event, data) { };
+        this.ethaddr = "Loading...";
+
+        if (this.account) {
+          let keypair = this.account.getKeypair();
+          if (keypair) {
+            this.bridgesession.startEthereum(keypair, this.onEvent).then(params => {
+              if (params.address == this.ethaddr)
+                return;
+              this.ethaddr = params.address;
+              this.event.trigger();
+            }).catch(err => {
+              console.err(err);
             });
-            this.state = 'in';
-            this.authType = opts.authType;
-	    
-	    //this.props.d.session.account.accountId();
-	    const params = {
-		network: 'Test ION Network ; June 2018',
-		horizonURL: 'https://api.ion.one',
-		bifrostURL: 'https://bridge.ion.one'
-	    };
-	    this.bridgesession = new BridgeSession(params);
-	    this.onEvent = function(event, data) {};
-	    this.ethaddr = "Loading...";
-	    
-	    if (this.account) {
-		let keypair = this.account.getKeypair();
-		if (keypair) {
-		    this.bridgesession.startEthereum(keypair, this.onEvent).then(params => {
-			if (params.address == this.ethaddr)
-			    return;
-			this.ethaddr = params.address;
-			this.event.trigger();
-		    }).catch(err => {
-			console.err(err);
-		    });
-		}
-	    }
-	    	    	    
-            this.event.trigger();
-	} catch (e) {
-            if (e.data) {
-		this.state = 'unfunded';
-		this.unfundedAccountId = keypair.publicKey();
-		setTimeout(() => {
-		    console.log('Checking to see if account has been created yet');
-		    if (this.state === 'unfunded') {
-			// Avoid race conditions
-			this.handlers.logIn(keypair, opts);
-		    }
-		}, 2000);
-		this.event.trigger();
-		return;
+          }
+        }
+
+        this.event.trigger();
+      } catch (e) {
+        if (e.data) {
+          this.state = 'unfunded';
+          this.unfundedAccountId = keypair.publicKey();
+          setTimeout(() => {
+            console.log('Checking to see if account has been created yet');
+            if (this.state === 'unfunded') {
+              // Avoid race conditions
+              this.handlers.logIn(keypair, opts);
             }
-            console.log(e);
-            this.state = 'out';
-            this.setupError = true;
-            this.event.trigger();
-	}
+          }, 2000);
+          this.event.trigger();
+          return;
+        }
+        console.log(e);
+        this.state = 'out';
+        this.setupError = true;
+        this.event.trigger();
+      }
     },
 
     // Using buildSignSubmit is the preferred way to go. It handles sequence numbers correctly.
@@ -164,7 +164,7 @@ export default function Send(driver) {
     sign: async (tx) => {
       if (this.authType === 'secret') {
         this.account.signWithSecret(tx);
-        console.log('Signed tx\nhash:', tx.hash().toString('hex'),'\n\n' + tx.toEnvelope().toXDR('base64'))
+        console.log('Signed tx\nhash:', tx.hash().toString('hex'), '\n\n' + tx.toEnvelope().toXDR('base64'))
         return {
           status: 'finish',
           signedTx: tx
@@ -173,7 +173,7 @@ export default function Send(driver) {
         return driver.modal.handlers.activate('signWithLedger', tx)
           .then(async (modalResult) => {
             if (modalResult.status === 'finish') {
-              console.log('Signed tx with ledger\nhash:', modalResult.output.hash().toString('hex'),'\n\n' + modalResult.output.toEnvelope().toXDR('base64'))
+              console.log('Signed tx with ledger\nhash:', modalResult.output.hash().toString('hex'), '\n\n' + modalResult.output.toEnvelope().toXDR('base64'))
               return {
                 status: 'finish',
                 signedTx: modalResult.output
@@ -183,17 +183,17 @@ export default function Send(driver) {
           })
       } else {
         return driver.modal.handlers.activate('sign', tx)
-        .then(async (modalResult) => {
-          if (modalResult.status === 'finish') {
-            await this.account.sign(tx);
-            console.log('Signed tx\nhash:', tx.hash().toString('hex'),'\n\n' + tx.toEnvelope().toXDR('base64'))
-            return {
-              status: 'finish',
-              signedTx: tx
-            };
-          }
-          return modalResult
-        })
+          .then(async (modalResult) => {
+            if (modalResult.status === 'finish') {
+              await this.account.sign(tx);
+              console.log('Signed tx\nhash:', tx.hash().toString('hex'), '\n\n' + tx.toEnvelope().toXDR('base64'))
+              return {
+                status: 'finish',
+                signedTx: tx
+              };
+            }
+            return modalResult
+          })
       }
     },
     buildSignSubmit: async (txBuilder) => {
@@ -216,17 +216,17 @@ export default function Send(driver) {
             this.account.refresh();
             return transactionResult;
           })
-          .catch(error => {
-            console.log('Failed tx\nhash:', tx.hash().toString('hex'))
-            throw error;
-          })
+            .catch(error => {
+              console.log('Failed tx\nhash:', tx.hash().toString('hex'))
+              throw error;
+            })
 
           result = {
             status: 'finish',
             serverResult: serverResult,
           }
         }
-      } catch(e) {
+      } catch (e) {
         console.log(e)
       }
 
@@ -299,7 +299,7 @@ export default function Send(driver) {
         delete this.account;
         init();
         window.location.reload();
-      } catch(e) {
+      } catch (e) {
         window.location.reload();
       }
     },
