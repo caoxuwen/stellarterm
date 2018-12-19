@@ -49,10 +49,13 @@ export default class MarginInfo extends React.Component {
     let last_price_defined = orderbook.trades && (orderbook.trades.length > 0) ? true : false;
     let last_price = last_price_defined ? orderbook.trades[orderbook.trades.length - 1][1] : 0;
 
+    let borrowed = buyingTrustDebt > 0 ? buyingTrustDebt : 0;
     let leverageInfoRow;
     let profitlossRow;
     if (last_price_defined) {
       let profitloss = - (buyingTrustDebt + sellingTrustDebt / last_price);
+      borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price) : 0;
+
       let lever = profitloss / baseTrustBalance;
       if (lever < 0) {
         leverageInfoRow = <tr className="MarginInfo__table__row">
@@ -79,7 +82,7 @@ export default class MarginInfo extends React.Component {
                 </tr>
                 <tr className="MarginInfo__table__row">
                   <td className="MarginInfo__table__header__item">Avaialble</td>
-                  <td className="MarginInfo__table__row__item">{(baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)).toFixed(5)}</td>
+                  <td className="MarginInfo__table__row__item">{(baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities) - borrowed).toFixed(5)}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
                   {buyingTrustName}
