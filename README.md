@@ -29,8 +29,8 @@ Some developers may want to use StellarTerm pointed to a custom horizon server o
 The StellarTerm build process checks for the presence of relevant environment variables.
 
 ```sh
-export STELLARTERM_CUSTOM_HORIZON_URL="https://horizon-testnet.stellar.org"
-export STELLARTERM_CUSTOM_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
+export CUSTOM_HORIZON_URL="https://horizon-testnet.stellar.org"
+export CUSTOM_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
 ```
 
 Once built, the configuration will be embedded into the StellarTerm output file (and the environment variable is no longer needed). To check this, look at the output of `index.html` and search for `stCustomConfig`.

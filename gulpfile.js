@@ -65,24 +65,24 @@ gulp.task('customConfig', (cb) => {
   configFile += 'window.stCustomConfig = ';
 
   let configObj = {};
-  if (process.env.STELLARTERM_CUSTOM_HORIZON_URL) {
-    configObj.horizonUrl = process.env.STELLARTERM_CUSTOM_HORIZON_URL;
+  if (process.env.CUSTOM_HORIZON_URL) {
+    configObj.horizonUrl = process.env.CUSTOM_HORIZON_URL;
 
     if (configObj.horizonUrl.indexOf('http') !== 0) {
-      throw new Error('STELLARTERM_CUSTOM_HORIZON_URL environment variable must begin with http. Got: ' + process.env.STELLARTERM_CUSTOM_HORIZON_URL);
+      throw new Error('CUSTOM_HORIZON_URL environment variable must begin with http. Got: ' + process.env.CUSTOM_HORIZON_URL);
     }
 
     if (configObj.horizonUrl.substr(-1) === '/') {
-      throw new Error('STELLARTERM_CUSTOM_HORIZON_URL must not have a trailing slash. Got: ' + process.env.STELLARTERM_CUSTOM_HORIZON_URL);
+      throw new Error('CUSTOM_HORIZON_URL must not have a trailing slash. Got: ' + process.env.CUSTOM_HORIZON_URL);
     }
   }
 
-  if (process.env.STELLARTERM_CUSTOM_NETWORK_PASSPHRASE) {
+  if (process.env.CUSTOM_NETWORK_PASSPHRASE) {
     if (!configObj.horizonUrl) {
-      throw new Error('To use STELLARTERM_CUSTOM_NETWORK_PASSPHRASE, the environment variable STELLARTERM_CUSTOM_HORIZON_URL must also be set');
+      throw new Error('To use CUSTOM_NETWORK_PASSPHRASE, the environment variable CUSTOM_HORIZON_URL must also be set');
     }
 
-    configObj.networkPassphrase = process.env.STELLARTERM_CUSTOM_NETWORK_PASSPHRASE;
+    configObj.networkPassphrase = process.env.CUSTOM_NETWORK_PASSPHRASE;
   }
 
   if (process.env.ASSET_ISSUER_PUBKEY_ETHI) {

@@ -81,7 +81,7 @@ export default class MarginInfo extends React.Component {
                   <td className="MarginInfo__table__row__item">{baseTrustBalance.toFixed(5)}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
-                  <td className="MarginInfo__table__header__item">Avaialble</td>
+                  <td className="MarginInfo__table__header__item">Available</td>
                   <td className="MarginInfo__table__row__item">{(baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities) - borrowed).toFixed(5)}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
