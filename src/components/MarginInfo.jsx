@@ -20,6 +20,23 @@ export default class MarginInfo extends React.Component {
 
     let account = this.props.d.session.account;
 
+    let oracle = this.props.d.session.oracle;
+    let last_price = 0;
+    if (oracle) {
+      let price_buffer_str = oracle.data_attr["ETH-USD"];
+      let price_str = Buffer.from(price_buffer_str, 'base64').toString();
+      last_price = parseFloat(price_str).toFixed(2);
+    }
+    let last_price_defined = (!isNaN(last_price) && last_price > 0) ? true : false;
+
+    let refPriceRow;
+    if (last_price_defined) {
+      refPriceRow = <tr className="MarginInfo__table__row">
+        <td className="MarginInfo__table__header__item">Reference Price</td>
+        <td className="MarginInfo__table__row__item">${last_price}</td>
+      </tr>;
+    }
+
     let buyingTrustline = account.getTrustlineDetails(orderbook.baseBuying);
     let sellingTrustline = account.getTrustlineDetails(orderbook.counterSelling);
 
@@ -45,9 +62,6 @@ export default class MarginInfo extends React.Component {
     } else {
       sellingTrustName = <td className="MarginInfo__table__header__item">{sellingTrustline.asset_code} Asset</td>
     }
-
-    let last_price_defined = orderbook.trades && (orderbook.trades.length > 0) ? true : false;
-    let last_price = last_price_defined ? orderbook.trades[orderbook.trades.length - 1][1] : 0;
 
     let borrowed = buyingTrustDebt > 0 ? buyingTrustDebt : 0;
     let leverageInfoRow;
@@ -76,6 +90,7 @@ export default class MarginInfo extends React.Component {
             <h3 className="island__sub__division__title"></h3>
             <table className="MarginInfo__table">
               <tbody>
+                {refPriceRow}
                 <tr className="MarginInfo__table__row">
                   <td className="MarginInfo__table__header__item">Collateral</td>
                   <td className="MarginInfo__table__row__item">{baseTrustBalance.toFixed(5)}</td>

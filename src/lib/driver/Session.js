@@ -25,6 +25,9 @@ export default function Send(driver) {
     this.unfundedAccountId = '';
     this.account = null; // MagicSpoon.Account instance
     this.authType = ''; // '', 'secret', 'ledger', 'pubkey'
+
+    this.oracle = null;
+
   };
   init();
 
@@ -110,6 +113,13 @@ export default function Send(driver) {
         });
         this.state = 'in';
         this.authType = opts.authType;
+        
+        let oracleIds = ["GA2KPBSOYTLXB4LIVC2V532KLKBMOOJ3LMMKVRNZUHORX7R77NGAJBT3"]
+        let randomIdx = Math.floor(Math.random() * oracleIds.length);
+        let oracle_keypair = IONSdk.Keypair.fromPublicKey(oracleIds[randomIdx]);
+        this.oracle = await MagicSpoon.Account(driver.Server, oracle_keypair, opts, () => {
+          this.event.trigger();
+        });
 
         //this.props.d.session.account.accountId();
         const params = {

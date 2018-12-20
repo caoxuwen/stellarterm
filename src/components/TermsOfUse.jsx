@@ -8,7 +8,7 @@ export default class TermsOfUse extends React.Component {
         <h2 className="Session__welcomeTitle">Terms of use</h2>
         <div>
           <h3>1. It's a god damn alpha software </h3>
-	  So use at your own god damn risk. Don't use your real keys. Probably a lot of bugs for sure, even though we are good programmers. If you encounter anything wrong or anything you don't like, let us know. 
+	  So use at your own god damn risk. Don't use your real keys. Probably a lot of bugs for sure, even though we are good programmers. If you encounter anything wrong or anything you don't like, let us know (email = xuwen at ion.one).
           <br />
           <br />
           <h3>2. Fill in for some GDPR bluh later </h3>

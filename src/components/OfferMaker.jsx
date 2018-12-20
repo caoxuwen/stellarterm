@@ -219,6 +219,15 @@ export default class OfferMaker extends React.Component {
 
           let account = this.props.d.session.account;
 
+          let oracle = this.props.d.session.oracle;
+          let last_price = 0;
+          if (oracle) {
+            let price_buffer_str = oracle.data_attr["ETH-USD"];
+            let price_str = Buffer.from(price_buffer_str, 'base64').toString();
+            last_price = parseFloat(price_str).toFixed(2);
+          }
+          let last_price_defined = (!isNaN(last_price) && last_price > 0) ? true : false;
+          
           let buyingTrustline = account.getTrustlineDetails(orderbook.baseBuying);
           let sellingTrustline = account.getTrustlineDetails(orderbook.counterSelling);
 
@@ -234,8 +243,6 @@ export default class OfferMaker extends React.Component {
           let inputSpendAmount = this.state.amount;
           let maxLeverage = 10;
 
-          let last_price_defined = orderbook.trades && (orderbook.trades.length > 0) ? true : false;
-          let last_price = last_price_defined ? orderbook.trades[orderbook.trades.length - 1][1] : 0;
           let borrowed = 0;
           borrowed += buyingTrustDebt > 0 ? buyingTrustDebt : 0;
           if (last_price_defined) {

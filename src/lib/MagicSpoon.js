@@ -115,6 +115,13 @@ const MagicSpoon = {
           updated = true;
         }
 
+        //TODO: more extensible
+        if (res.data_attr["ETH-USD"]) {
+          if (!_.isEqual(sdkAccount.data_attr["ETH-USD"], res.data_attr["ETH-USD"])) {
+            sdkAccount.data_attr["ETH-USD"] = res.data_attr["ETH-USD"];
+            updated = true;
+          }
+        }
         // We shouldn't pull latest sequence number. It'll only go out of sync if user is using the account in two places
 
         if (updated) {
