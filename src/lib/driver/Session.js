@@ -113,13 +113,20 @@ export default function Send(driver) {
         });
         this.state = 'in';
         this.authType = opts.authType;
-        
-        let oracleIds = ["GA2KPBSOYTLXB4LIVC2V532KLKBMOOJ3LMMKVRNZUHORX7R77NGAJBT3"]
-        let randomIdx = Math.floor(Math.random() * oracleIds.length);
-        let oracle_keypair = IONSdk.Keypair.fromPublicKey(oracleIds[randomIdx]);
-        this.oracle = await MagicSpoon.Account(driver.Server, oracle_keypair, opts, () => {
-          this.event.trigger();
-        });
+
+        let oracleIds = ["GA2KPBSOYTLXB4LIVC2V532KLKBMOOJ3LMMKVRNZUHORX7R77NGAJBT3"];
+        if (oracleIds.length > 0) {
+          let randomIdx = Math.floor(Math.random() * oracleIds.length);
+          let oracle_keypair = IONSdk.Keypair.fromPublicKey(oracleIds[randomIdx]);
+          try {
+            this.oracle = await MagicSpoon.Account(driver.Server, oracle_keypair, opts, () => {
+              this.event.trigger();
+            });
+          } catch (e) {
+            //no effect
+            console.log(e);
+          }
+        }
 
         //this.props.d.session.account.accountId();
         const params = {
