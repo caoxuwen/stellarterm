@@ -20,7 +20,7 @@ import Driver from './lib/Driver';
 
 let network = {
   horizonUrl: 'https://api.ion.one',
-  networkPassphrase: 'Test ION Network ; June 2018',
+  networkPassphrase: 'Test ION Network ; Nov 2018',
   isDefault: true, // If it's default, then we don't show a notice bar at the top
   isTestnet: false,
   isCustom: false,
