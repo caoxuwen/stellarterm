@@ -246,46 +246,52 @@ export default class OfferMaker extends React.Component {
           let maxLeverage = 10;
 
           let borrowed = 0;
-          borrowed += buyingTrustDebt > 0 ? buyingTrustDebt : 0;
+          borrowed += buyingTrustDebt > 0 ? buyingTrustDebt / maxLeverage : 0;
           if (last_price_defined) {
-            borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price) : 0;
+            borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price / maxLeverage) : 0;
           }
+
+          let liquidation = buyingTrustline.liquidation || sellingTrustline.liquidation;
 
           let maxOffer = (baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)) * maxLeverage;
 
+          if (!liquidation) {
+            if (this.props.side === 'buy') {
+              let price = parseFloat(this.state.price);
+              if (!isNaN(price) && price > 0) {
+                if (sellingTrustDebt >= 0) {
+                  youBorrow = <div className="OfferMaker__youHave">You can borrow {((maxOffer - borrowed) * price).toFixed(5)} more {sellingTrustline.asset_code}.</div>;
+                } else {
+                  youBorrow = <div className="OfferMaker__youHave">You can sell {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}.</div>;
+                }
+              }
 
-          if (this.props.side === 'buy') {
-            let price = parseFloat(this.state.price);
-            if (!isNaN(price) && price > 0) {
-              if (sellingTrustDebt <= 0) {
-                youBorrow = <div className="OfferMaker__youHave">You can borrow {((maxOffer - borrowed) * price).toFixed(5)} {sellingTrustline.asset_code}.</div>;
+              if (sellingTrustDebt < 0) {
+                youHave = <div className="OfferMaker__youHave">You have {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code} in asset.</div>;
               } else {
-                youBorrow = <div className="OfferMaker__youHave">You can borrow {((maxOffer - borrowed) * price).toFixed(5)} more {sellingTrustline.asset_code}.</div>;
+                youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}.</div>;
+              }
+
+            } else {
+              if (buyingTrustDebt >= 0) {
+                youBorrow = <div className="OfferMaker__youHave">You can borrow {(maxOffer - borrowed).toFixed(5)} more {buyingTrustline.asset_code}.</div>;
+              } else {
+                youBorrow = <div className="OfferMaker__youHave">You can sell {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}.</div>;
+              }
+
+              if (buyingTrustDebt < 0) {
+                youHave = <div className="OfferMaker__youHave">You have {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code} in asset.</div>;
+              } else {
+                youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}.</div>;
               }
             }
 
-            if (sellingTrustDebt < 0) {
-              youHave = <div className="OfferMaker__youHave">You have {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code} in asset.</div>;
-            } else {
-              youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}.</div>;
-            }
-
-          } else {
-            if (buyingTrustDebt <= 0) {
-              youBorrow = <div className="OfferMaker__youHave">You can borrow {(maxOffer - borrowed).toFixed(5)} {buyingTrustline.asset_code}.</div>;
-            } else {
-              youBorrow = <div className="OfferMaker__youHave">You can borrow {(maxOffer - borrowed).toFixed(5)} more {buyingTrustline.asset_code}.</div>;
-            }
-
-            if (buyingTrustDebt < 0) {
-              youHave = <div className="OfferMaker__youHave">You have {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code} in asset.</div>;
-            } else {
-              youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}.</div>;
+            if (parseFloat(inputSpendAmount) > parseFloat(maxOffer)) {
+              insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
             }
           }
-
-          if (parseFloat(inputSpendAmount) > parseFloat(maxOffer)) {
-            insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
+          else {
+            insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Account currently under liquidation process. Cannot trade.</p>;
           }
         } else {
           let inputSpendAmount = this.props.side === 'buy' ? this.state.total : this.state.amount;
