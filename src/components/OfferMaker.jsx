@@ -260,29 +260,29 @@ export default class OfferMaker extends React.Component {
               let price = parseFloat(this.state.price);
               if (!isNaN(price) && price > 0) {
                 if (sellingTrustDebt >= 0) {
-                  youBorrow = <div className="OfferMaker__youHave">You can borrow {((maxOffer - borrowed) * price).toFixed(5)} more {sellingTrustline.asset_code}.</div>;
+                  youBorrow = <div className="OfferMaker__youHave">You can borrow {((maxOffer - borrowed) * price).toFixed(7)} more {sellingTrustline.asset_code}.</div>;
                 } else {
-                  youBorrow = <div className="OfferMaker__youHave">You can sell {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}.</div>;
+                  youBorrow = <div className="OfferMaker__youHave">You can sell {-sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code}.</div>;
                 }
               }
 
               if (sellingTrustDebt < 0) {
-                youHave = <div className="OfferMaker__youHave">You have {-sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code} in asset.</div>;
+                youHave = <div className="OfferMaker__youHave">You have {-sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code} in asset.</div>;
               } else {
-                youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(5)} {sellingTrustline.asset_code}.</div>;
+                youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code}.</div>;
               }
 
             } else {
               if (buyingTrustDebt >= 0) {
-                youBorrow = <div className="OfferMaker__youHave">You can borrow {(maxOffer - borrowed).toFixed(5)} more {buyingTrustline.asset_code}.</div>;
+                youBorrow = <div className="OfferMaker__youHave">You can borrow {(maxOffer - borrowed).toFixed(7)} more {buyingTrustline.asset_code}.</div>;
               } else {
-                youBorrow = <div className="OfferMaker__youHave">You can sell {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}.</div>;
+                youBorrow = <div className="OfferMaker__youHave">You can sell {-buyingTrustDebt.toFixed(7)} {buyingTrustline.asset_code}.</div>;
               }
 
               if (buyingTrustDebt < 0) {
-                youHave = <div className="OfferMaker__youHave">You have {-buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code} in asset.</div>;
+                youHave = <div className="OfferMaker__youHave">You have {-buyingTrustDebt.toFixed(7)} {buyingTrustline.asset_code} in asset.</div>;
               } else {
-                youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(5)} {buyingTrustline.asset_code}.</div>;
+                youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(7)} {buyingTrustline.asset_code}.</div>;
               }
             }
 

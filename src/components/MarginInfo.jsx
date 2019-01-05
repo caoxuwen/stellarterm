@@ -77,7 +77,7 @@ export default class MarginInfo extends React.Component {
       if (lever < 0) {
         leverageInfoRow = <tr className="MarginInfo__table__row">
           <td className="MarginInfo__table__header__item">Leverage</td>
-          <td className="MarginInfo__table__row__item">{-lever.toFixed(5)}X</td>
+          <td className="MarginInfo__table__row__item">{-lever.toFixed(3)}X</td>
         </tr>;
       }
       profitlossRow = <tr className="MarginInfo__table__row">
@@ -107,19 +107,19 @@ export default class MarginInfo extends React.Component {
                 {refPriceRow}
                 <tr className="MarginInfo__table__row">
                   <td className="MarginInfo__table__header__item">Collateral</td>
-                  <td className="MarginInfo__table__row__item">{baseTrustBalance.toFixed(5)}</td>
+                  <td className="MarginInfo__table__row__item">{baseTrustBalance.toFixed(3)}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
                   <td className="MarginInfo__table__header__item">Available</td>
-                  <td className="MarginInfo__table__row__item">{availableMargin.toFixed(5)}</td>
+                  <td className="MarginInfo__table__row__item">{availableMargin.toFixed(3)}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
                   {buyingTrustName}
-                  <td className="MarginInfo__table__row__item">{Math.abs(buyingTrustDebt.toFixed(5))}</td>
+                  <td className="MarginInfo__table__row__item">{Math.abs(buyingTrustDebt.toFixed(3))}</td>
                 </tr>
                 <tr className="MarginInfo__table__row">
                   {sellingTrustName}
-                  <td className="MarginInfo__table__row__item">{Math.abs(sellingTrustDebt.toFixed(5))}</td>
+                  <td className="MarginInfo__table__row__item">{Math.abs(sellingTrustDebt.toFixed(3))}</td>
                 </tr>
                 {profitlossRow}
                 {leverageInfoRow}
