@@ -19,7 +19,6 @@ export default class Header extends React.Component {
       </div>
     }
     return <div className="HeaderBackBack">
-      {networkBar}
       <div className="so-back HeaderBack">
         <div className="so-chunk Header">
           <nav className="Header__nav">
