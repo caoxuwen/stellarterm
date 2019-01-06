@@ -25,12 +25,12 @@ export default class LoginPage extends React.Component {
       newKeypair: null,
       bip32Path: '0',
       ledgerAdvanced: false,
-      termsAccepted: false,
+      termsAccepted: false
     }
 
 
     this.handleInput = (event) => {
-      this.setState({secretInput: event.target.value});
+      this.setState({ secretInput: event.target.value });
     }
     this.handleBip32PathInput = (event) => {
       let value = parseInt(event.target.value);
@@ -43,10 +43,10 @@ export default class LoginPage extends React.Component {
       if (value > 2147483647) { // int32: 2^31-1
         value = 2147483647;
       }
-      this.setState({bip32Path: '' + value});
+      this.setState({ bip32Path: '' + value });
     }
     this.enableAdvanced = () => {
-      this.setState({ledgerAdvanced: true});
+      this.setState({ ledgerAdvanced: true });
     }
     this.proceedWithLedger = (event) => {
       event.preventDefault();
@@ -59,7 +59,7 @@ export default class LoginPage extends React.Component {
     }
     this.toggleShow = (event) => {
       event.preventDefault();
-      this.setState({show: !this.state.show});
+      this.setState({ show: !this.state.show });
     }
     this.handleSubmit = (event) => {
       event.preventDefault();
@@ -71,11 +71,32 @@ export default class LoginPage extends React.Component {
       this.props.d.session.handlers.logInWithSecret(this.state.secretInput);
     }
     this.handleGenerate = event => {
+      this.state.gettingfund = false;
+      this.state.showFundButton = true;
+      this.state.showFundError = false;
+
       let keypair = IONSdk.Keypair.random();
       this.setState({
         newKeypair: {
           pubKey: keypair.publicKey(),
           secretKey: keypair.secret(),
+        }
+      });
+    }
+
+    this.handleFund = (event) => {
+      event.preventDefault();
+      this.state.gettingfund = true;
+
+      this.props.d.session.handlers.getfundfromfriendbot(this.state.newKeypair.pubKey, (result) => {
+        this.state.gettingfund = false;
+        
+        if (result) {
+          this.state.showFundButton = false;
+          this.state.showFundError = false;
+        } else {
+          this.state.showFundButton = true;
+          this.state.showFundError = true;
         }
       });
     }
@@ -99,20 +120,34 @@ export default class LoginPage extends React.Component {
     }
 
     let newKeypairDetails;
+    let fundButton;
+    let fundError;
     if (this.state.newKeypair !== null) {
+      if (this.state.showFundError)
+        fundError = <p>Error in funding account. Please try again later.</p>
+      else
+        fundError = <p></p>
+
+      if (this.state.showFundButton) {
+        fundButton = <input type="submit" className="LoginPage__generate s-button" onClick={this.handleFund} value="Fund account" disabled={this.state.gettingfund}></input>
+      } else
+        fundButton = <p>Fund credited for account setup. You can login now.</p>
+
       newKeypairDetails = <div className="LoginPage__generatedNote">
         <p><strong>Keep your key secure. ION does not save it and will not be able to help you recover it if lost.</strong></p>
         <p>Public key (will be your <strong>Account ID</strong>): {this.state.newKeypair.pubKey}</p>
         <p>Secret key (<strong>SAVE THIS AND KEEP THIS SECURE</strong>): <span className="clickToSelect" onClick={clickToSelect}>{this.state.newKeypair.secretKey}</span></p>
+        {fundButton}
+        {fundError}
       </div>
     }
 
     let inputType = this.state.show ? 'text' : 'password';
 
     let acceptTerms = <label className="s-inputGroup LoginPage__accept">
-        <input className="LoginPage__accept__checkbox" type="checkbox" checked={this.state.termsAccepted} onClick={() => this.setState({termsAccepted: !this.state.termsAccepted})} />
-        <span className="LoginPage__accept__label">I accept the <a href="#terms-of-use" className="LoginPage__accept__link">Terms of Use</a>, understand the risks associated with cryptocurrencies.</span>
-      </label>
+      <input className="LoginPage__accept__checkbox" type="checkbox" checked={this.state.termsAccepted} onClick={() => this.setState({ termsAccepted: !this.state.termsAccepted })} />
+      <span className="LoginPage__accept__label">I accept the <a href="#terms-of-use" className="LoginPage__accept__link">Terms of Use</a>, understand the risks associated with cryptocurrencies.</span>
+    </label>
 
     let body;
 
@@ -159,10 +194,6 @@ export default class LoginPage extends React.Component {
             <input type="submit" className="LoginPage__generate s-button" onClick={this.handleGenerate} value="Generate keypair" disabled={!this.state.termsAccepted}></input>
             {newKeypairDetails}
           </div>
-          <div className="LoginPage__notes">
-            <h3>Account generation security notes</h3>
-            <p>The key is generated using entropy from <a href="https://github.com/dchest/tweetnacl-js#random-bytes-generation">TweetNaCl's randomByte function</a> which, in most browsers, uses getRandomValues from the <a href="https://w3c.github.io/webcrypto/Overview.html">Web Cryptography API</a>. However, using a secure random number generation does not protect you from a compromised computer. Take great care to make sure your computer is secure and do not run this on a computer you do not trust.</p>
-          </div>
         </div>
       </div>
     } else if (this.props.urlParts[0] === 'ledger') {
@@ -192,7 +223,7 @@ export default class LoginPage extends React.Component {
                 e.target.value = '';
                 e.target.value = content;
               }}
-             />
+            />
             <span className="LoginPage__customPath__surrounding">'</span>
           </label>
         }
@@ -203,7 +234,7 @@ export default class LoginPage extends React.Component {
 
             {ledgerErrorMessage}
             <div className="s-inputGroup LoginPage__inputGroup">
-              <input type="submit" className="LoginPage__submit inputGroup__item s-button" value="Sign in with Ledger" disabled={!this.state.termsAccepted}/>
+              <input type="submit" className="LoginPage__submit inputGroup__item s-button" value="Sign in with Ledger" disabled={!this.state.termsAccepted} />
               {customPath}
             </div>
             {ledgerSetupErrorMessage}
@@ -242,7 +273,8 @@ export default class LoginPage extends React.Component {
         <div className="LoginPage__paddedBox">
           <h3>Setup instructions</h3>
           <ol>
-	    <li>This feature is just a placeholder for now. Please DO NOT use.</li>
+            <li>TBD. Feature not active yet</li>
+            {/*
             <li>Get a Ledger Nano S and connect it to your computer.</li>
             <li>Set up your Ledger Nano S by following instructions on the Ledger site: <a href="https://www.ledgerwallet.com/start/ledger-nano-s" target="_blank" rel="nofollow noopener noreferrer">https://www.ledgerwallet.com/start/ledger-nano-s</a></li>
             <li>Install the <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">Ledger Manager</a> app on your computer: <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">https://www.ledgerwallet.com/apps/manager</a></li>
@@ -257,14 +289,14 @@ export default class LoginPage extends React.Component {
             </li>
             <li>
               Inside the app, go to <strong>Settings</strong>, then <strong>Browser support</strong>, then select <strong>yes</strong> and press both buttons.
-            </li>
+            </li>*/}
           </ol>
         </div>
         <div className="LoginPage__paddedBox">
           <h3>Notes</h3>
           <ul>
             <li>Ledger Nano S support is available on Chrome and Opera.</li>
-            <li>Install the Stellar app with the <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">Ledger Manager</a>.</li>
+            {/*<li>Install the Stellar app with the <a href="https://www.ledgerwallet.com/apps/manager" target="_blank" rel="nofollow noopener noreferrer">Ledger Manager</a>.</li>*/}
             <li>Enable browser support in the app settings.</li>
             <li>Choose the BIP32 path of the account you want use: 44'/148'/n' where n is the account index. Or use the default account 44'/148'/0'.</li>
           </ul>

@@ -462,7 +462,7 @@ const MagicSpoon = {
       }));
     } catch (e) {
       if (!opts.asset.isNative()) {
-        throw new Error('Destination account does not exist. To create it, you must send a minimum of 1 lumens to create it');
+        throw new Error('Destination account does not exist. To create it, you must send a minimum of 1 IONX to create it');
       }
       transaction = transaction.addOperation(IONSdk.Operation.createAccount({
         destination: opts.destination,

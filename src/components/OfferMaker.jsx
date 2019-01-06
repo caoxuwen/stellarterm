@@ -233,14 +233,13 @@ export default class OfferMaker extends React.Component {
           let buyingTrustline = account.getTrustlineDetails(orderbook.baseBuying);
           let sellingTrustline = account.getTrustlineDetails(orderbook.counterSelling);
 
-          let buyingAsset = directory.getAssetByAccountId(buyingTrustline.asset_code, buyingTrustline.asset_issuer);
-          let sellingAsset = directory.getAssetByAccountId(sellingTrustline.asset_code, sellingTrustline.asset_issuer);
+          let buyingAsset = directory.getAssetByAccountId(orderbook.baseBuying.getCode(), orderbook.baseBuying.getIssuer());
 
           let baseTrustline = buyingAsset.isBaseAsset ? buyingTrustline : sellingTrustline;
 
-          let baseTrustBalance = parseFloat(baseTrustline.balance);
-          let buyingTrustDebt = parseFloat(buyingTrustline.debt);
-          let sellingTrustDebt = parseFloat(sellingTrustline.debt);
+          let baseTrustBalance = baseTrustline != null ? parseFloat(baseTrustline.balance) : 0;
+          let buyingTrustDebt = buyingTrustline != null ? parseFloat(buyingTrustline.debt) : 0;
+          let sellingTrustDebt = sellingTrustline != null ? parseFloat(sellingTrustline.debt) : 0;
 
           let inputSpendAmount = this.state.amount;
           let maxLeverage = 10;
@@ -251,10 +250,10 @@ export default class OfferMaker extends React.Component {
             borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price / maxLeverage) : 0;
           }
 
-          let liquidation = buyingTrustline.liquidation || sellingTrustline.liquidation;
+          let liquidation = (buyingTrustline && buyingTrustline.liquidation) || (sellingTrustline && sellingTrustline.liquidation);
 
-          let maxOffer = (baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)) * maxLeverage;
-
+          let maxOffer = buyingTrustline ? (baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)) * maxLeverage : 0;
+ 
           if (!liquidation) {
             if (this.props.side === 'buy') {
               let price = parseFloat(this.state.price);
@@ -379,13 +378,13 @@ export default class OfferMaker extends React.Component {
       overview = <div>
         <p className="OfferMaker__enable">To trade, activate these assets on your account:</p>
         {trustNeededAssets.map((asset, index) => {
-          return <TrustButton
+          return <div className="OfferMaker__enable__button"><TrustButton
             key={asset.getCode() + '-' + asset.getIssuer()}
             d={this.props.d}
             asset={asset}
             message={asset.getCode() + " accepted"}
             trustMessage={"Accept " + asset.getCode()}
-          />
+          /></div>
         })}
       </div>
     } else {

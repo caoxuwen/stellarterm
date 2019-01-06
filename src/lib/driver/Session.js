@@ -253,7 +253,21 @@ export default function Send(driver) {
 
       return result; // bssResult
     },
+    getfundfromfriendbot: async (pubKey, onUpdate) => {
+      this.event.trigger();
 
+      driver.Server.friendbot(pubKey)
+        .call()
+        .then((response) => {
+          onUpdate(true);
+          this.event.trigger();
+        })
+        .catch((err) => {
+          console.log(err);
+          onUpdate(false);
+          this.event.trigger();
+        })
+    },
     setInflation: async (destination) => {
       let txBuilder = MagicSpoon.buildTxSetInflation(this.account, destination);
       return await this.handlers.buildSignSubmit(txBuilder);
