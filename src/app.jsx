@@ -114,7 +114,7 @@ class TermApp extends React.Component {
           <div className="island">
             <AssetList d={this.props.d} limit={6}></AssetList>
             <div className="AssetListFooter">
-              View more assets on the <a href="#markets">market list page</a>.
+              {/*View more assets on the <a href="#markets">market list page</a>.*/}
             </div>
           </div>
         </div>

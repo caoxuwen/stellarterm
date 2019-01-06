@@ -34,7 +34,7 @@ function DirectoryBuilder() {
     issuer: null,
       domain: 'native',
       summary: 'ION exchange token',
-      detail: 'pay exchange taker fee, franchise fee with IONX',
+      detail: 'pay exchange fees with IONX',
       topTradePairSlug: 'IONX-native/ETHI-ion.one'
   };
 

@@ -33,8 +33,8 @@ directory.addAsset('ion.one', {
   issuer: window.stCustomConfig.assetIssuer_ethi,
   instructions: 'https://ion.one',
   type: 'token',
-  summary: 'ETH ionized',
-  detail: 'corresponds 1:1 to Ethereum, deposit through atomic swap',
+  summary: 'Ethereum tokenized on ION',
+  detail: 'equivalent to Long ETH',
   topTradePairSlug: 'ETHI-ion.one/USDI-ion.one',
   isBaseAsset: true
 });
@@ -44,8 +44,8 @@ directory.addAsset('ion.one', {
   issuer: window.stCustomConfig.assetIssuer_usdi,
   instructions: 'https://ion.one',
   type: 'token',
-  summary: 'USD ionized',
-  detail: 'pegs to USD price through funding between longs and shorts',
+  summary: 'representation of cash position',
+  detail: 'equivalent to Short ETH',
   topTradePairSlug: 'USDI-ion.one/ETHI-ion.one',
   isBaseAsset: false
 });

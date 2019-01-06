@@ -131,7 +131,7 @@ export default class LoginPage extends React.Component {
       if (this.state.showFundButton) {
         fundButton = <input type="submit" className="LoginPage__generate s-button" onClick={this.handleFund} value="Fund account" disabled={this.state.gettingfund}></input>
       } else
-        fundButton = <p>Fund credited for account setup. You can login now.</p>
+        fundButton = <p>Fund credited for account setup. You can  <a href="/#account">login</a> now.</p>
 
       newKeypairDetails = <div className="LoginPage__generatedNote">
         <p><strong>Keep your key secure. ION does not save it and will not be able to help you recover it if lost.</strong></p>

@@ -44,7 +44,10 @@ export default class MarginInfo extends React.Component {
     let tableContent;
 
     if (buyingTrustline == null || sellingTrustline == null) {
-      tableContent = <tbody><tr><td>Must accept the assets before trading</td></tr></tbody>
+      tableContent = <tbody>
+        <tr><td>Must accept the assets</td></tr>
+        <tr><td>before you can start trading</td></tr>
+        </tbody>
     } else {
 
       let buyingAsset = directory.getAssetByAccountId(orderbook.baseBuying.getCode(), orderbook.baseBuying.getIssuer());

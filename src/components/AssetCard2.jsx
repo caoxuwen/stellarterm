@@ -12,7 +12,7 @@ import directory from '../directory';
 // The children elements are responsible for padding within the AssetCard
 
 const decAtIndex = (input, index) => {
-  return parseInt(input.substr(index,2),16);
+  return parseInt(input.substr(index, 2), 16);
 }
 const hexToRgba = (input, opacity) => {
   return 'rgba(' + decAtIndex(input, 1) + ',' + decAtIndex(input, 3) + ',' + decAtIndex(input, 5) + ',' + BACKGROUND_OPACITY + ')';
@@ -54,7 +54,7 @@ export default class AssetCard2 extends React.Component {
       backgroundStyle.background = rgbaColor;
     }
 
-    let issuerAccountId = (asset.issuer === null) ? 'native lumens' : asset.issuer.substr(0,12) + '.........' + asset.issuer.substr(-12,12);
+    let issuerAccountId = (asset.issuer === null) ? 'native lumens' : asset.issuer.substr(0, 12) + '.........' + asset.issuer.substr(-12, 12);
     // Unlike AssetCard (original), this one does not link to the domain. Users can simply type it in the address bar
 
     let assetCardMain = <div className="AssetCard2__main" style={backgroundStyle}>
@@ -63,10 +63,10 @@ export default class AssetCard2 extends React.Component {
         <div className="AssetCard2__header">
           <span className="AssetCard2__header__code">{asset.code}</span>
           {/*<span className="AssetCard2__header__domain">{anchor.name}</span>*/}
-          <span className="AssetCard2__header__domain"> {asset.summary}</span>	  	  
+          <span className="AssetCard2__header__domain"> {asset.summary}</span>
         </div>
         {/*<p className="AssetCard2__issuerAccountId">Issuer (<strong>not you</strong>): {issuerAccountId}</p>*/}
-	<p className="AssetCard2__issuerAccountId"> {asset.detail}</p>
+        {/*<p className="AssetCard2__issuerAccountId"> {asset.detail}</p>*/}
       </div>
     </div>
 
