@@ -47,7 +47,7 @@ export default class MarginInfo extends React.Component {
       tableContent = <tbody>
         <tr><td>Must accept the assets</td></tr>
         <tr><td>before you can start trading</td></tr>
-        </tbody>
+      </tbody>
     } else {
 
       let buyingAsset = directory.getAssetByAccountId(orderbook.baseBuying.getCode(), orderbook.baseBuying.getIssuer());
@@ -73,23 +73,22 @@ export default class MarginInfo extends React.Component {
       }
 
       let maxLeverage = 10;
-      let borrowed = buyingTrustDebt > 0 ? buyingTrustDebt / maxLeverage : 0;
+      let borrowed = buyingTrustDebt > 0 ? buyingTrustDebt : 0;
       let leverageInfoRow;
       let profitlossRow;
       if (last_price_defined) {
         let profitloss = - (buyingTrustDebt + sellingTrustDebt / last_price);
-        borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price / maxLeverage) : 0;
+        borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price) : 0;
 
-        let lever = profitloss / baseTrustBalance;
-        if (lever < 0) {
-          leverageInfoRow = <tr className="MarginInfo__table__row">
-            <td className="MarginInfo__table__header__item">Leverage</td>
-            <td className="MarginInfo__table__row__item">{-lever.toFixed(3)}X</td>
-          </tr>;
-        }
+        let lever = borrowed / baseTrustBalance;
+        leverageInfoRow = <tr className="MarginInfo__table__row">
+          <td className="MarginInfo__table__header__item">Current Leverage</td>
+          <td className="MarginInfo__table__row__item">{lever.toFixed(3)}X</td>
+        </tr>;
+
         profitlossRow = <tr className="MarginInfo__table__row">
           <td className="MarginInfo__table__header__item">P/L in {baseTrustline.asset_code}</td>
-          <td className="MarginInfo__table__row__item">{profitloss.toFixed(3)} ({(lever * 100).toFixed(3)}%)</td>
+          <td className="MarginInfo__table__row__item">{profitloss.toFixed(3)} ({(profitloss / baseTrustBalance * 100).toFixed(3)}%)</td>
         </tr>;
       }
 
@@ -125,7 +124,7 @@ export default class MarginInfo extends React.Component {
         {profitlossRow}
         {leverageInfoRow}
         <tr className="MarginInfo__table__row">
-          <td className="MarginInfo__table__header__item">Max Leverage</td>
+          <td className="MarginInfo__table__header__item">Max Initial Leverage</td>
           <td className="MarginInfo__table__row__item">{maxLeverage}x</td>
         </tr>
         {liquidationRow}
