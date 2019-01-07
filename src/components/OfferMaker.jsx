@@ -219,17 +219,6 @@ export default class OfferMaker extends React.Component {
 
           let account = this.props.d.session.account;
 
-          let oracle = this.props.d.session.oracle;
-          let last_price = 0;
-          if (oracle) {
-            let price_buffer_str = oracle.data_attr["ETH-USD"];
-            if (price_buffer_str) {
-              let price_str = Buffer.from(price_buffer_str, 'base64').toString();
-              last_price = parseFloat(price_str).toFixed(2);
-            }
-          }
-          let last_price_defined = (!isNaN(last_price) && last_price > 0) ? true : false;
-
           let buyingTrustline = account.getTrustlineDetails(orderbook.baseBuying);
           let sellingTrustline = account.getTrustlineDetails(orderbook.counterSelling);
 
@@ -237,34 +226,37 @@ export default class OfferMaker extends React.Component {
 
           let baseTrustline = buyingAsset.isBaseAsset ? buyingTrustline : sellingTrustline;
 
-          let baseTrustBalance = baseTrustline != null ? parseFloat(baseTrustline.balance) : 0;
-          let buyingTrustDebt = buyingTrustline != null ? parseFloat(buyingTrustline.debt) : 0;
-          let sellingTrustDebt = sellingTrustline != null ? parseFloat(sellingTrustline.debt) : 0;
+          let baseTrustBalance = baseTrustline ? parseFloat(baseTrustline.balance) : 0;
+          let buyingTrustDebt = buyingTrustline ? parseFloat(buyingTrustline.debt) : 0;
+          let sellingTrustDebt = sellingTrustline ? parseFloat(sellingTrustline.debt) : 0;
 
           let inputSpendAmount = this.state.amount;
           let maxLeverage = 10;
 
-          let borrowed = 0;
-          borrowed += buyingTrustDebt > 0 ? buyingTrustDebt : 0;
-          if (last_price_defined) {
-            borrowed += sellingTrustDebt > 0 ? (sellingTrustDebt / last_price) : 0;
+          let price = parseFloat(this.state.price);
+          let price_defined = true;
+          if (isNaN(price) || price <= 0) {
+            price = 1;
+            price_defined = false;
+          }
+
+          let borrowedA = buyingTrustDebt;
+          let borrowedB = 0;
+          if (price_defined) {
+            borrowedB = sellingTrustDebt / price;
           }
 
           let liquidation = (buyingTrustline && buyingTrustline.liquidation) || (sellingTrustline && sellingTrustline.liquidation);
-
-          let maxOffer = buyingTrustline ? (baseTrustBalance - parseFloat(buyingTrustline.selling_liabilities)) * maxLeverage : 0;
- 
-          let toborrow = maxOffer - borrowed > 0 ? maxOffer - borrowed : 0;
+          let maxOffer = buyingTrustline ? (baseTrustBalance - parseFloat(baseTrustline.selling_liabilities)) * maxLeverage : 0;
 
           if (!liquidation) {
             if (this.props.side === 'buy') {
-              let price = parseFloat(this.state.price);
-              if (!isNaN(price) && price > 0) {
-                if (sellingTrustDebt >= 0) {
-                  youBorrow = <div className="OfferMaker__youHave">You can borrow {(toborrow * price).toFixed(7)} more {sellingTrustline.asset_code}.</div>;
-                } else {
-                  youBorrow = <div className="OfferMaker__youHave">You can sell {-sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code}.</div>;
-                }
+              let toborrow = maxOffer - borrowedB > 0 ? maxOffer - borrowedB : 0;
+
+              if (sellingTrustDebt >= 0) {
+                youBorrow = <div className="OfferMaker__youHave">You can borrow {sellingTrustline.asset_code} to buy {toborrow.toFixed(7)} more {buyingTrustline.asset_code}.</div>;
+              } else {
+                youBorrow = <div className="OfferMaker__youHave">You can sell {-sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code}.</div>;
               }
 
               if (sellingTrustDebt < 0) {
@@ -273,9 +265,14 @@ export default class OfferMaker extends React.Component {
                 youHave = <div className="OfferMaker__youHave">You have borrowed {sellingTrustDebt.toFixed(7)} {sellingTrustline.asset_code}.</div>;
               }
 
+              if (parseFloat(inputSpendAmount) > parseFloat(toborrow)) {
+                insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
+              }
             } else {
+              let toborrow = maxOffer - borrowedA > 0 ? maxOffer - borrowedA : 0;
+
               if (buyingTrustDebt >= 0) {
-                youBorrow = <div className="OfferMaker__youHave">You can borrow {toborrow.toFixed(7)} more {buyingTrustline.asset_code}.</div>;
+                youBorrow = <div className="OfferMaker__youHave">You can borrow to sell {toborrow.toFixed(7)} more {buyingTrustline.asset_code}.</div>;
               } else {
                 youBorrow = <div className="OfferMaker__youHave">You can sell {-buyingTrustDebt.toFixed(7)} {buyingTrustline.asset_code}.</div>;
               }
@@ -285,11 +282,13 @@ export default class OfferMaker extends React.Component {
               } else {
                 youHave = <div className="OfferMaker__youHave">You have borrowed {buyingTrustDebt.toFixed(7)} {buyingTrustline.asset_code}.</div>;
               }
+
+              if (parseFloat(inputSpendAmount) > parseFloat(toborrow)) {
+                insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
+              }
             }
 
-            if (parseFloat(inputSpendAmount) > parseFloat(maxOffer)) {
-              insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
-            }
+
           }
           else {
             insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Account currently under liquidation process. Cannot trade.</p>;
