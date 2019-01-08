@@ -105,6 +105,29 @@ export default class MarginInfo extends React.Component {
           <td className="MarginInfo__table__row__item">On</td>
         </tr>;
       }
+
+      let netDirection;
+      if (buyingTrustDebt > 0) {
+        netDirection = "SHORT";
+      } else if (sellingTrustDebt > 0) {
+        netDirection = "LONG";
+      } else {
+        netDirection = "NEUTRAL";
+      }
+      let netDirectionRow = <tr className="MarginInfo__table__row">
+        <td className="MarginInfo__table__header__item">Net Position</td>
+        <td className="MarginInfo__table__row__item">{netDirection}</td>
+      </tr>;
+
+      let liquidationPrice = sellingTrustDebt / (baseTrustBalance - buyingTrustDebt);
+      let liquidationDirection = buyingTrustDebt > 0 ? ">= " : "<= ";
+      let liquidationPriceStr = isNaN(liquidationPrice) || liquidationPrice <= 0 || liquidationPrice >= 100000 ?
+        "N.A." : liquidationDirection + "$" + liquidationPrice.toFixed(2);
+      let liquidationPriceRow = <tr className="MarginInfo__table__row">
+        <td className="MarginInfo__table__header__item">Liquidation Price Est.</td>
+        <td className="MarginInfo__table__row__item">{liquidationPriceStr}</td>
+      </tr>;
+
       tableContent = <tbody>
         {refPriceRow}
         < tr className="MarginInfo__table__row" >
@@ -123,13 +146,14 @@ export default class MarginInfo extends React.Component {
           {sellingTrustName}
           <td className="MarginInfo__table__row__item">{Math.abs(sellingTrustDebt.toFixed(3))}</td>
         </tr>
+        {netDirectionRow}
+        {liquidationPriceRow}
         {profitlossRow}
         {leverageInfoRow}
         <tr className="MarginInfo__table__row">
           <td className="MarginInfo__table__header__item">Max Initial Leverage</td>
           <td className="MarginInfo__table__row__item">{maxLeverage}x</td>
         </tr>
-        {liquidationRow}
       </tbody>;
     }
 
