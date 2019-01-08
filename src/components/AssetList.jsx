@@ -43,7 +43,8 @@ export default class AssetList extends React.Component {
       if (asset.topTradePairSlug) {
         tradeLink = <span className="AssetList__asset__amount__trade">trade</span>
       }
-      let volume24h = asset.volume24h_USD ? '$' + asset.volume24h_USD.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}) : '$0';
+      let volume24h = asset.volume24h_USD ? '$' + asset.volume24h_USD.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2}) : '$0';
+      let volume7d = asset.volume7d_USD ? '$' + asset.volume7d_USD.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2}) : '$0';
 
       let change24hPercentage;
       if (asset.id === 'XLM-native') {
@@ -65,6 +66,7 @@ export default class AssetList extends React.Component {
         <div className="AssetList__asset__assetCard"><AssetCard2 code={asset.code} issuer={asset.issuer} boxy={false}></AssetCard2></div>
         <div className="AssetList__asset__amount">{priceUSD}</div>
         <div className="AssetList__asset__amount">{volume24h}</div>
+        <div className="AssetList__asset__amount">{volume24h}</div>
         <div className="AssetList__asset__amount">{change24h}</div>
         <div className="AssetList__asset__amount">{tradeLink}</div>
       </a>);
@@ -76,6 +78,7 @@ export default class AssetList extends React.Component {
           <div className="AssetList__head__cell AssetList__head__asset">Asset</div>
           <div className="AssetList__head__cell AssetList__head__amount">Price (USDI)</div>
           <div className="AssetList__head__cell AssetList__head__amount">Volume (24h)</div>
+          <div className="AssetList__head__cell AssetList__head__amount">Volume (7d)</div>
           <div className="AssetList__head__cell AssetList__head__amount">Change (24h)</div>
         </div>
         {rows}

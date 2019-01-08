@@ -23,6 +23,9 @@
     "lodash": "4.17.5",
     "prop-types": "15.6.0",
     "ion-sdk": "^0.11.9",
+    "jsonp": "^0.2.1",
+    "prop-types": "^15.5.10",
+    "to-querystring": "^1.0.4",
     "bluebird": "3.5.1"
   },
   "devDependencies": {

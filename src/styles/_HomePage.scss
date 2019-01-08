@@ -12,6 +12,30 @@
   margin-right: 8px;
 }
 
+.HomePage__lead__subscribe_container {
+  text-align: center;
+  background-color: aliceblue;
+}
+
+.HomePage__lead__subscribe_container_inner {
+  padding: 8px 0px;
+}
+
+.HomePage__lead__subscribe_status {
+  padding: 5px 5px;
+}
+
+.HomePage__lead__subscribe_input {
+  padding: 6px;
+  margin-right: 20px;
+}
+
+.HomePage__lead__subscribe_detail {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 30px;
+  margin-right: 20px;
+}
 .HomePage__lead__actions__button {
   &:after {
     border-bottom: none !important;
@@ -24,6 +48,13 @@
   font-size: 42px;
   margin-bottom: 27px;
 }
+
+.HomePage__lead__title_sup {
+  font-size: 21px;
+  margin-left: 5px;
+  top: -0.75em;
+}
+
 .HomePage__lead__summary {
   font-size: 20px;
   font-weight: 300;

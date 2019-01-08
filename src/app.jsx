@@ -17,6 +17,7 @@ import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import TermsOfUse from './components/TermsOfUse.jsx';
 import Driver from './lib/Driver';
+import MailchimpSubscribe from "./components/Mailsubscribe.jsx";
 
 let network = {
   horizonUrl: 'https://api.ion.one',
@@ -53,6 +54,9 @@ const parseUrl = (href) => {
   }
   return hash.substr(1);
 }
+
+const mailchimp_url = "https://one.us7.list-manage.com/subscribe/post?u=3b8bf21900c91f2fa3b994955&amp;id=f0c8c4c945"
+const SimpleForm = () => <MailchimpSubscribe url={mailchimp_url} />
 
 class TermApp extends React.Component {
   constructor(props) {
@@ -102,9 +106,10 @@ class TermApp extends React.Component {
       // Home page
       body = <div>
         <div className="HomePage__black">
+          <SimpleForm />
           <div className="so-back">
             <div className="HomePage__lead">
-              <h2 className="HomePage__lead__title">Trade on the <a href="#exchange">ION Decentralized Exchange</a></h2>
+              <h2 className="HomePage__lead__title">Trade on the <a href="#margin">ION Decentralized Exchange</a><sup className="HomePage__lead__title_sup">Alpha</sup></h2>
               <p className="HomePage__lead__summary">ION is a decentralized derivatives market, built with SCP <br />No margin interest, Trade with leverage, <a href="https://explorer.ion.one" target="_blank" rel="nofollow noopener noreferrer">100% Transparency</a></p>
               {this.renderHomePageActions()}
             </div>
@@ -114,7 +119,7 @@ class TermApp extends React.Component {
           <div className="island">
             <AssetList d={this.props.d} limit={6}></AssetList>
             <div className="AssetListFooter">
-              {/*View more assets on the <a href="#markets">market list page</a>.*/}
+              More trading pairs to be listed during beta launch. Stay tuned.
             </div>
           </div>
         </div>
@@ -169,7 +174,7 @@ class TermApp extends React.Component {
       } else {
         if (this.d.orderbook.data.ready) {
           setTimeout(() => {
-            let newUrl = 'exchange'+Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
+            let newUrl = 'exchange' + Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,
@@ -183,7 +188,7 @@ class TermApp extends React.Component {
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {
-            let newUrl = 'exchange'+Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
+            let newUrl = 'exchange' + Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,
@@ -206,7 +211,7 @@ class TermApp extends React.Component {
       } else {
         if (this.d.orderbook.data.ready) {
           setTimeout(() => {
-            let newUrl = 'margin'+Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
+            let newUrl = 'margin' + Stellarify.pairToExchangeUrl(this.d.orderbook.data.baseBuying, this.d.orderbook.data.counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,
@@ -220,7 +225,7 @@ class TermApp extends React.Component {
 
           this.d.orderbook.handlers.setOrderbook(baseBuying, counterSelling);
           setTimeout(() => {
-            let newUrl = 'margin'+Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
+            let newUrl = 'margin' + Stellarify.pairToExchangeUrl(baseBuying, counterSelling);
             history.replaceState(null, null, '#' + newUrl);
             this.setState({
               url: newUrl,
@@ -228,6 +233,8 @@ class TermApp extends React.Component {
           }, 0);
         }
       }
+    } else if (urlParts[0] === 'whitepaper') {
+
     } else {
       body = <NotFound></NotFound>
     }

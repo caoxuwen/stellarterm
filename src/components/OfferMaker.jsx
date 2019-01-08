@@ -287,8 +287,6 @@ export default class OfferMaker extends React.Component {
                 insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Error: You do not have enough margin to create this offer.</p>;
               }
             }
-
-
           }
           else {
             insufficientBalanceMessage = <p className="OfferMaker__insufficientBalance">Account currently under liquidation process. Cannot trade.</p>;

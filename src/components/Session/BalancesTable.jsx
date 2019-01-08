@@ -25,7 +25,7 @@ export default class BalancesTable extends React.Component {
           issuer: balance.issuer,
         });
         if (tickerAsset) {
-          balanceUSD = '$' + (balance.balance * tickerAsset.price_USD).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          balanceUSD = '$' + (balance.balance * tickerAsset.price_USD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           if (tickerAsset.slug !== 'IONX-native') {
             tradeLink = <a href={'#exchange/' + tickerAsset.topTradePairSlug} className="BalancesTable__row__trade">trade</a>
           }
@@ -47,7 +47,7 @@ export default class BalancesTable extends React.Component {
         </td>
         <td className="BalancesTable__row__item BalancesTable__row__item--amount">{Printify.lightenZeros(balance.balance)}</td>
         <td className="BalancesTable__row__item BalancesTable__row__item--amount">{balanceUSD}</td>
-        <td className="BalancesTable__row__item BalancesTable__row__item--amount">{tradeLink}</td>
+        {/*<td className="BalancesTable__row__item BalancesTable__row__item--amount">{tradeLink}</td>*/}
       </tr>
     });
 
@@ -57,7 +57,7 @@ export default class BalancesTable extends React.Component {
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__asset">Asset</td>
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount">Balance</td>
           <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount">Value (USDI)</td>
-          <td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount"></td>
+          {/*<td className="BalancesTable__head__cell BalancesTable__row__item--heading BalancesTable__head__amount"></td>*/}
         </tr>
       </thead>
       <tbody>

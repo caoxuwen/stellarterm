@@ -20,7 +20,7 @@ function Driver(driverOpts) {
   this.orderbook = new Orderbook(this);
   this.send = new Send(this);
   this.history = new History(this);
-  this.ticker = new Ticker();
+  this.ticker = new Ticker(this.Server);
   this.modal = new Modal(this);
 
   window.view = (accountId) => {
