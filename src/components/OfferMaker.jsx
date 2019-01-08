@@ -211,7 +211,7 @@ export default class OfferMaker extends React.Component {
       let targetBalance = this.props.side === 'buy' ? counterBalance : baseBalance;
       let targetAsset = this.props.side === 'buy' ? this.props.d.orderbook.data.counterSelling : this.props.d.orderbook.data.baseBuying;
 
-      if (targetBalance) {
+      if (hasAllTrust && targetBalance) {
 
         if (this.isMarginTrade) {
 
