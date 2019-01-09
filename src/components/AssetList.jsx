@@ -66,7 +66,7 @@ export default class AssetList extends React.Component {
         <div className="AssetList__asset__assetCard"><AssetCard2 code={asset.code} issuer={asset.issuer} boxy={false}></AssetCard2></div>
         <div className="AssetList__asset__amount">{priceUSD}</div>
         <div className="AssetList__asset__amount">{volume24h}</div>
-        <div className="AssetList__asset__amount">{volume24h}</div>
+        <div className="AssetList__asset__amount">{volume7d}</div>
         <div className="AssetList__asset__amount">{change24h}</div>
         <div className="AssetList__asset__amount">{tradeLink}</div>
       </a>);
