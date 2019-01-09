@@ -19,14 +19,15 @@ Ticker.prototype.load = function (attempt) {
   }
 
   let now = (new Date()).getTime();
-  let oneday = 1000 * 60 * 60 * 24;
-  let lastweek = now - 8 * oneday;
+  let onehour= 1000 * 60 * 60;
+  let oneday = onehour * 24;
+  let lastweek = now - 7 * oneday;
   let selling = new IONSdk.Asset("USDI", window.stCustomConfig.assetIssuer_usdi);
   let base = new IONSdk.Asset("ETHI", window.stCustomConfig.assetIssuer_ethi);
   /*
   req.getJson('https://api.stellarterm.com/v1/ticker.json')
     .then(tickerData => {*/
-  this.server.tradeAggregation(base, selling, lastweek, now + oneday, oneday, 0)
+  this.server.tradeAggregation(base, selling, lastweek, now + onehour, oneday, 0)
     .call()
     .then(response => {
       this.ready = true;
