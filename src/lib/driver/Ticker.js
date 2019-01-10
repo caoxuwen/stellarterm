@@ -27,7 +27,7 @@ Ticker.prototype.load = function (attempt) {
   /*
   req.getJson('https://api.stellarterm.com/v1/ticker.json')
     .then(tickerData => {*/
-  this.server.tradeAggregation(base, selling, lastweek, now + onehour, oneday, 0)
+  this.server.tradeAggregation(base, selling, lastweek, now + oneday, oneday, 0)
     .call()
     .then(response => {
       this.ready = true;
